@@ -1,0 +1,3 @@
+[submodule "vendor/treetop"]
+	path = vendor/treetop
+	url = git@github.com:blambeau/treetop.git
