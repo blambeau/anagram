@@ -1,6 +1,8 @@
-require 'anagram'
 require 'test/unit'
-test_files = Dir[File.join(File.dirname(__FILE__), '**/*_test.rb')]
+require 'anagram'
+
+dir = File.dirname(__FILE__)
+test_files = Dir[File.join(dir, '**/*_test.rb')]+Dir[File.join(dir, '../examples/**/*_test.rb')]
 test_files.each { |file|
   require(file) 
 }
