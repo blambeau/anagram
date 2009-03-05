@@ -1,2 +1,25 @@
 #!/usr/bin/env ruby
-puts "hello anagram!"
+#
+#  Anagram: Grammars, parsers and tools around them.
+#           (see lib/anagram/anagram.rb for more information)
+#
+#  Copyright (c) 2009 University of Louvain, Bernard Lambeau
+#  Released under a MIT licence.
+#
+require 'anagram'
+require 'anagram/command/anagram_command'
+
+begin
+  r = Anagram::Commands::AnagramCommand.new
+  r.run ARGV
+rescue Interrupt => e
+  $stderr.puts
+  $stderr.puts "Interrupted"
+  raise e
+rescue OptionParser::ParseError => e
+  $stderr.puts e.message
+  raise e
+rescue => e
+  $stderr.puts e.message
+  raise e
+end
