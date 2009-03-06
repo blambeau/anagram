@@ -158,6 +158,7 @@ module Anagram
         # find named nodes
         found = {}
         parsed.interesting_methods.each do |label|
+          next if /^_nt_/ =~ label.to_s
           label = label.to_s.to_sym
           child = parsed.send(label)
           found[child] = label

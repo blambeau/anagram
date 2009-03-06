@@ -113,6 +113,12 @@ module Anagram
               [[context_node.select(arg)], true]
             when Anagram::Ast::Node
               [[arg], true]
+            when Array
+              collected = arg.collect {|sub| to_selection(sub)[0]}
+              collected = collected.flatten.compact.uniq
+              [collected, false]
+            when NilClass
+              [[nil], true]
             else
               [context_node.select(arg), false]
           end

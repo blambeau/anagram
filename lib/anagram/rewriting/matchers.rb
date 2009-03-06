@@ -13,6 +13,9 @@ module Anagram
       
       # Or matcher
       class OrMatcher < Matcher
+        def self.[](*args)
+          OrMatcher.new(*args)
+        end
         def initialize(*matchers)
           @matchers = matchers
         end
@@ -23,6 +26,9 @@ module Anagram
       
       # And matcher
       class AndMatcher < Matcher
+        def self.[](*args)
+          AndMatcher.new(*args)
+        end
         def initialize(*matchers)
           @matchers = matchers
         end

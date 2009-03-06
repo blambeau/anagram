@@ -5,6 +5,7 @@ module Anagram
     # Engine pluggin providing tools to rewrite ASTs.
     #
     module AstRewriting
+      include Anagram::Ast::Helper
 
       # Extensions to the engine DSL
       module DSLExtensions
@@ -38,6 +39,25 @@ module Anagram
         types
       end
       
+      # Recursively finds all descendant nodes matching the given matcher
+      def find(matcher, node=context_node)
+        node.collect do |child|
+          if matcher===child
+            child
+          else
+            find(matcher, child)
+          end
+        end.flatten
+      end
+      
+      # Applies on all nodes returned by find(matcher)
+      def find_and_apply(matcher)
+        sel_apply(find(matcher))
+      end
+      
+      def list(matcher)
+        branch() << find_and_apply(matcher)
+      end
       
       ### Helpers for  creation ############################################
       
@@ -65,6 +85,7 @@ module Anagram
       # children denoted by _args_.
       def copy(*args)
         copy = light_copy
+        yield copy if block_given?
         args.each do |arg|
           case arg
             when Integer
@@ -75,7 +96,7 @@ module Anagram
               child, key = context_node.select(arg), arg
               copy << [key, apply(child)]
             when Node  
-              child, key = arg, arg.key_in_parent
+              child, key = arg, nil # arg.key_in_parent
               copy << [key, apply(child)]
             else
               copy << apply(arg)

@@ -31,6 +31,7 @@ module Anagram
       # Creates a node instance and extend it with modules given by _types_
       # (expected to be an Array).
       def initialize(types)
+        raise ArgumentError if types.any? {|type| type.nil?}
         @parent, @key_in_parent = nil, nil
         @semantic_types = types
         @source_interval = nil
@@ -39,6 +40,14 @@ module Anagram
         end
       end
       
+      # Extends with a semantic type
+      def add_semantic_types(*mods)
+        raise ArgumentError if mods.any? {|mod| mod.nil?}
+        mods.each do |mod|
+          self.extend(mod) if Module===mod
+          @semantic_types << mod
+        end
+      end
       
       ### Write API ###########################################################
       protected
@@ -55,7 +64,7 @@ module Anagram
           super(name, *args)
         end
       end
-            
+      
       # Callback when this node is attached in a parent. This method is not 
       # expected to be used by users.
       def attach(parent, key)

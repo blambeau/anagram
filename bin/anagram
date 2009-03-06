@@ -6,8 +6,14 @@
 #  Copyright (c) 2009 University of Louvain, Bernard Lambeau
 #  Released under a MIT licence.
 #
-require 'anagram'
-require 'anagram/command/anagram_command'
+begin
+  require 'anagram'
+  require 'anagram/command/anagram_command'
+rescue Exception
+  $LOAD_PATH << File.join(File.dirname(__FILE__), '../lib')
+  require 'anagram'
+  require 'anagram/command/anagram_command'
+end
 
 begin
   r = Anagram::Commands::AnagramCommand.new

@@ -63,6 +63,8 @@ module Anagram
       def select(*args)
         if args.length==1
           collected = case arg=args[0]
+            when NilClass
+              nil
             when Integer
               return @children[arg]
             when Symbol
@@ -77,7 +79,7 @@ module Anagram
       end
            
       ### Write API ###########################################################
-      
+            
       #
       # Pushes _child_ as last element in the children array. Associates it with 
       # _key_ in the Hash-like structure. Returns self. 
@@ -124,7 +126,7 @@ module Anagram
           key, child = arg
           child = Leaf.new(child) unless Node===child
         elsif Node===arg
-          key, child = arg.key_in_parent, arg
+          key, child = nil, arg #arg.key_in_parent, arg
         elsif Array===arg
           arg.each {|elm| self.<<(elm)}
           return self
@@ -152,11 +154,16 @@ module Anagram
           buffer << "  "*indent << ":#{key_in_parent} => Branch("
         end
         buffer << (show_source ? source_interval.to_s : semantic_types.join(', '))
-        buffer << ")[\n"
-        self.each do |child|
-          child.debug(buffer, show_source, indent+1)
+        buffer << ")"
+        unless self.children.empty?
+          buffer << "[\n"
+          self.each do |child|
+            child.debug(buffer, show_source, indent+1)
+          end
+          buffer << "  "*indent << "]\n"
+        else
+          buffer << "[]\n"
         end
-        buffer << "  "*indent << "]\n"
         buffer
       end
       
