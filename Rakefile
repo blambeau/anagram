@@ -15,7 +15,7 @@ task :all => [:test_all, :rdoc]
 desc "Lauches all tests"
 Rake::TestTask.new do |test|
   test.libs       << [ "lib", "test" ]
-  test.test_files = ['test/unit/test_all.rb', 'pack/**/*_test.rb']
+  test.test_files = ['test/unit/test_all.rb', 'lib/anagram/pack/**/*_test.rb']
   test.verbose    =  true
 end
 
@@ -29,7 +29,7 @@ task :test_all => [:test, :spec]
 ##################################################################### Doc
 desc "Generates rdoc documentation"
 Rake::RDocTask.new do |rdoc|
-  rdoc.rdoc_files.include("README", "LICENCE", "lib/", "pack/")
+  rdoc.rdoc_files.include("README", "LICENCE", "lib/")
   rdoc.main     = "README"
   rdoc.rdoc_dir = "doc/api"
   rdoc.title    = "WLang Documentation"
@@ -47,8 +47,8 @@ gemspec = Gem::Specification.new do |s|
   s.summary = "Anagram, grammars, parsers and tools"
   s.platform = Gem::Platform::RUBY
   s.description = %{Reusable grammars and parsers, parser generator and tools for manipulating them.}
-  s.files = Dir['lib/**/*'] + Dir['pack/**/*'] + Dir['test/**/*'] + Dir['bin/*'] + Dir['vendor/**/*']
-  s.require_paths = ['lib', 'pack', 'vendor/treetop']
+  s.files = Dir['lib/**/*'] + Dir['test/**/*'] + Dir['bin/*'] + Dir['vendor/**/*']
+  s.require_paths = ['lib', 'vendor/treetop']
   s.bindir  = 'bin'
   s.executables = ['anagram']
   s.has_rdoc = false
