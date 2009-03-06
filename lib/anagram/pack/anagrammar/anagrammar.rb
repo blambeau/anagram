@@ -33,7 +33,14 @@ module Anagram
   end
 end
 
+t1 = Time.now
 syntax_tree = Anagram::Pack::Anagrammar.syntax_tree(File.read(File.join(dir,'anagrammar.anagram')))
+t2 = Time.now
+puts "Parsing + convertion took #{t2-t1} ms."
+
+t1 = Time.now
 sem_tree = Anagram::Pack::Anagrammar.semantic_tree(syntax_tree)
-puts sem_tree.inspect
+t2 = Time.now
+puts "Rewriting took #{t2-t1} ms."
+#puts sem_tree.inspect
 #puts res.inspect

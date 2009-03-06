@@ -140,7 +140,7 @@ module Anagram
       # Checks if some argument look like a (key, node) pair that can be 
       # transformed to a child node (leaf or branch according to node type).
       def seems_key_node?(arg)
-        Array===arg and arg.length==2 and Symbol===arg[0]
+        Array===arg and arg.length==2 and (Symbol===arg[0] or arg[0].nil?)
       end
       
       ### Debug API ###########################################################

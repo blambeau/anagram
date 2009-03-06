@@ -2,9 +2,12 @@ module Anagram
   module Pack
     module Anagrammar
       class Syntax2Semantics < Anagram::Rewriting::Rewriter
-        type_rewrite SyntaxTree => SemanticTree
+        type_rewrite SyntaxTree => SemanticTree, 
+                     SemanticTree => SemanticTree
         configuration do
-          template SyntaxTree|ModuleDecl  do |r,n| r.copy_all                                               end
+          mode :main
+          template SyntaxTree             do |r,n| tree=r.copy_all; r.in_mode(:push_up) {r.apply(tree)}     end
+          template ModuleDecl             do |r,n| r.copy_all                                               end
           template Grammar                do |r,n| r.copy(:grammar_name, :include_list, :parsing_rule_list) end
           template IncludeList            do |r,n| r.branch() << r.apply(r.descendant(Include))             end
           template Include                do |r,n| r.copy(:module_name)                                     end
@@ -41,6 +44,18 @@ module Anagram
           template InlineModule           do |r,n| r.as_leaf(r.strip)                                        end
           template Prefix|Suffix          do |r,n| r.rewrite_node_types()[0]                                 end
           template Anagram::Ast::Node     do |r,n| r.leaf(r.strip)                                           end
+            
+          mode :push_up
+          template ZeroOrMore             do |r,n| r.branch(ZeroOrMore)   << r.in_mode(:copy) {r.apply(n)}   end
+          template OneOrMore              do |r,n| r.branch(OneOrMore)    << r.in_mode(:copy) {r.apply(n)}   end
+          template Optional               do |r,n| r.branch(Optional)     << r.in_mode(:copy) {r.apply(n)}   end
+          template AndPredicate           do |r,n| r.branch(AndPredicate) << r.in_mode(:copy) {r.apply(n)}   end
+          template NotPredicate           do |r,n| r.branch(NotPredicate) << r.in_mode(:copy) {r.apply(n)}   end
+          template Transient              do |r,n| r.branch(Transient)    << r.in_mode(:copy) {r.apply(n)}   end
+          template Anagram::Ast::Node     do |r,n| r.copy_all                                                end
+          
+          mode :copy
+          template Anagram::Ast::Node     do |r,n| r.in_mode(:push_up) {r.copy_all}                          end
         end
       end
     end
