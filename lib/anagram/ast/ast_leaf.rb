@@ -56,6 +56,7 @@ module Anagram
       # Returns nil or an empty array according to argument conventions
       def select(*args) 
         return nil if (args.length==1 and (Integer===args[0] or Symbol===args[0]))
+        raise ArgumentError, "Unexpected nil selection matcher" if args.any? {|arg| arg.nil?}
         []
       end
       

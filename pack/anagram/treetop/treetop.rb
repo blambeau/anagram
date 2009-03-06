@@ -1,56 +1,60 @@
 #require 'rubygems'
 $LOAD_PATH << '/Users/blambeau/work/chefbe/devel/anagram/lib'
 require 'anagram'
-
 module Anagram
   module Pack
-    
-    # Grammar pack boolean expressions
     module TreetopMeta
       
-      # Syntactic and semantic types
-      module SemanticTree; end
-      module GrammarFile; end
-      module ModuleDecl; end
-      module Grammar; end
-      module IncludeList; end
-      module Include; end
-      module ParsingRuleList; end
-      module ParsingRule; end
-      module Choice; end
-      module Sequence; end
-      module Labeled; end
-      module Primary; end
-      module Parenthesized; end
-      module Terminal; end
-      module Nonterminal; end
-      module CharacterClass; end
-      module AnythingSymbol; end
-      module NodeTypeDecl; end
-      module ModuleType; end
-      module InlineModule; end
-      module Optional; end
-      module OneOrMore; end
-      module ZeroOrMore; end
-      module AndPredicate; end
-      module NotPredicate; end
-      module Transient; end  
-      Prefix      = Anagram::Rewriting::OrMatcher[AndPredicate, NotPredicate, Transient]
-      Suffix      = Anagram::Rewriting::OrMatcher[Optional, OneOrMore, ZeroOrMore]
-      Atomic      = Anagram::Rewriting::OrMatcher[Terminal, Nonterminal, Parenthesized, CharacterClass, AnythingSymbol]
-      Alternative = Anagram::Rewriting::OrMatcher[Sequence, Primary]
-      NodeType    = Anagram::Rewriting::OrMatcher[ModuleType, InlineModule]
+      module CommonTypes
+        module ModuleDecl; end
+        module Grammar; end
+        module IncludeList; end
+        module Include; end
+        module ParsingRuleList; end
+        module ParsingRule; end
+        module Choice; end
+        module Sequence; end
+        module Labeled; end
+        module Terminal; end
+        module Nonterminal; end
+        module CharacterClass; end
+        module AnythingSymbol; end
+        module NodeTypeDecl; end
+        module ModuleType; end
+        module InlineModule; end
+        module Optional; end
+        module OneOrMore; end
+        module ZeroOrMore; end
+        module AndPredicate; end
+        module NotPredicate; end
+        module Transient; end  
+      end
+      module SyntaxTypes
+        include CommonTypes
+        module GrammarFile; end
+        module Primary; end
+        module Parenthesized; end
+        Prefix      = Anagram::Rewriting::OrMatcher[AndPredicate, NotPredicate, Transient]
+        Suffix      = Anagram::Rewriting::OrMatcher[Optional, OneOrMore, ZeroOrMore]
+        Atomic      = Anagram::Rewriting::OrMatcher[Terminal, Nonterminal, Parenthesized, CharacterClass, AnythingSymbol]
+        Alternative = Anagram::Rewriting::OrMatcher[Sequence, Primary]
+        NodeType    = Anagram::Rewriting::OrMatcher[ModuleType, InlineModule]
+      end
+      module SemanticTypes
+        include CommonTypes
+        module SemanticTree; end
+      end
+      module AllTypes
+        include SyntaxTypes
+        include SemanticTypes
+      end
+      
 
       ### Private section #####################################################
       private
 
       # Semantic types
-      SEMANTIC_TYPES = [SemanticTree, ModuleDecl, Grammar, IncludeList, Include,
-                        ParsingRuleList, ParsingRule, Choice, Sequence, Labeled,
-                        Terminal, Nonterminal, CharacterClass, AnythingSymbol,
-                        NodeTypeDecl, ModuleType, InlineModule,
-                        Optional, ZeroOrMore, OneOrMore, 
-                        AndPredicate, NotPredicate, Transient]
+      SEMANTIC_TYPES = SemanticTypes.constants.collect {|c| SemanticTypes.const_get(c)}
       
       # Ensures that a given parameter matches the kind we want
       def self.ensure_is_a(expr, expected)
@@ -62,6 +66,10 @@ module Anagram
         else
           raise ArgumentError, "#{expected} expected, #{expr} received"\
         end
+      end
+      
+      def self.const_missing(name)
+        AllTypes.const_get(name)
       end
       
       # Converts a syntax tree to a semantic tree
@@ -117,14 +125,14 @@ module Anagram
       
       # Parses a grammar and returns a parse tree
       def self.syntax_tree(expr)
-        return expr if GrammarFile===expr
+        return expr if SyntaxTypes::GrammarFile===expr
         Anagram::Ast[TreetopMeta::GrammarParser.new.parse_or_fail(ensure_is_a(expr, String))]
       end
       
       # Converts a grammar parse tree to a semantic tree
       def self.semantic_tree(expr)
-        return expr if SemanticTree===expr
-        syntax2semantic(ensure_is_a(expr, GrammarFile))
+        return expr if SemanticTypes::SemanticTree===expr
+        syntax2semantic(ensure_is_a(expr, SyntaxTypes::GrammarFile))
       end
       
     end # module Boolexpr

@@ -25,7 +25,6 @@ class EngineTest < Test::Unit::TestCase
     @two = @ast.select(:right)
     @paren = @ast.select(:left)
     @plus = @paren.select(:root)
-#    puts @ast.inspect
   end
   
   # Tests to_selection of a rewriter
@@ -36,8 +35,11 @@ class EngineTest < Test::Unit::TestCase
       @state = Anagram::Rewriting::Engine::State.new(nil)
       @state.context_node = ast
     end
+    assert_equal [[nil], true], r.to_selection(nil)
+    assert_equal [[], false], r.to_selection(nil, nil)
     assert_equal [[@ast], true], r.to_selection(@ast)
     assert_equal [[@two], true], r.to_selection(:right)
+    assert_equal [[@two], false], r.to_selection(nil, :right)
     assert_equal [[@paren, @two], false], r.to_selection(:left, :right)
     assert_equal [[@two], false], r.to_selection(Lit)
   end

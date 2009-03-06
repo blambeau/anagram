@@ -14,7 +14,7 @@ module Anagram
 			#
 			# Author: Bernard Lambeau <blambeau at gmail dot com>
 			#
-			module ParserMethods
+			module ParseMethods
      include Treetop::Runtime
 
      def root
@@ -257,7 +257,7 @@ module Anagram
        if r2
          s4, i4 = [], index
          loop do
-           if input.index(Regexp.new('[a-z]'), index) == index
+           if has_terminal?('[a-z]', true, index)
              r5 = instantiate_node(SyntaxNode,input, index...(index + 1))
              @index += 1
            else
@@ -292,7 +292,7 @@ module Anagram
          r0 = r1
        else
          i7, s7 = index, []
-         if input.index(Regexp.new('["]'), index) == index
+         if has_terminal?('["]', true, index)
            r8 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
@@ -304,7 +304,7 @@ module Anagram
            loop do
              i10 = index
              i11, s11 = index, []
-             if input.index(Regexp.new('[\\\\]'), index) == index
+             if has_terminal?('[\\\\]', true, index)
                r12 = instantiate_node(SyntaxNode,input, index...(index + 1))
                @index += 1
              else
@@ -312,7 +312,7 @@ module Anagram
              end
              s11 << r12
              if r12
-               if input.index(Regexp.new('["]'), index) == index
+               if has_terminal?('["]', true, index)
                  r13 = instantiate_node(SyntaxNode,input, index...(index + 1))
                  @index += 1
                else
@@ -332,7 +332,7 @@ module Anagram
              else
                i14, s14 = index, []
                i15 = index
-               if input.index(Regexp.new('["]'), index) == index
+               if has_terminal?('["]', true, index)
                  r16 = instantiate_node(SyntaxNode,input, index...(index + 1))
                  @index += 1
                else
@@ -383,7 +383,7 @@ module Anagram
            end
            s7 << r9
            if r9
-             if input.index(Regexp.new('["]'), index) == index
+             if has_terminal?('["]', true, index)
                r18 = instantiate_node(SyntaxNode,input, index...(index + 1))
                @index += 1
              else
@@ -432,7 +432,7 @@ module Anagram
 
        i0, s0 = index, []
        i1 = index
-       if input.index('true', index) == index
+       if has_terminal?('true', false, index)
          r2 = instantiate_node(SyntaxNode,input, index...(index + 4))
          @index += 4
        else
@@ -442,7 +442,7 @@ module Anagram
        if r2
          r1 = r2
        else
-         if input.index('false', index) == index
+         if has_terminal?('false', false, index)
            r3 = instantiate_node(SyntaxNode,input, index...(index + 5))
            @index += 5
          else
@@ -567,7 +567,7 @@ module Anagram
        end
 
        i0 = index
-       if input.index('and', index) == index
+       if has_terminal?('and', false, index)
          r1 = instantiate_node(SyntaxNode,input, index...(index + 3))
          @index += 3
        else
@@ -577,7 +577,7 @@ module Anagram
        if r1
          r0 = r1
        else
-         if input.index('or', index) == index
+         if has_terminal?('or', false, index)
            r2 = instantiate_node(SyntaxNode,input, index...(index + 2))
            @index += 2
          else
@@ -587,7 +587,7 @@ module Anagram
          if r2
            r0 = r2
          else
-           if input.index('not', index) == index
+           if has_terminal?('not', false, index)
              r3 = instantiate_node(SyntaxNode,input, index...(index + 3))
              @index += 3
            else
@@ -597,7 +597,7 @@ module Anagram
            if r3
              r0 = r3
            else
-             if input.index('true', index) == index
+             if has_terminal?('true', false, index)
                r4 = instantiate_node(SyntaxNode,input, index...(index + 4))
                @index += 4
              else
@@ -607,7 +607,7 @@ module Anagram
              if r4
                r0 = r4
              else
-               if input.index('false', index) == index
+               if has_terminal?('false', false, index)
                  r5 = instantiate_node(SyntaxNode,input, index...(index + 5))
                  @index += 5
                else
@@ -645,7 +645,7 @@ module Anagram
        end
 
        i0, s0 = index, []
-       if input.index('or', index) == index
+       if has_terminal?('or', false, index)
          r1 = instantiate_node(SyntaxNode,input, index...(index + 2))
          @index += 2
        else
@@ -685,7 +685,7 @@ module Anagram
        end
 
        i0, s0 = index, []
-       if input.index('and', index) == index
+       if has_terminal?('and', false, index)
          r1 = instantiate_node(SyntaxNode,input, index...(index + 3))
          @index += 3
        else
@@ -725,7 +725,7 @@ module Anagram
        end
 
        i0, s0 = index, []
-       if input.index('not', index) == index
+       if has_terminal?('not', false, index)
          r1 = instantiate_node(SyntaxNode,input, index...(index + 3))
          @index += 3
        else
@@ -765,7 +765,7 @@ module Anagram
        end
 
        i0, s0 = index, []
-       if input.index('(', index) == index
+       if has_terminal?('(', false, index)
          r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
          @index += 1
        else
@@ -805,7 +805,7 @@ module Anagram
        end
 
        i0, s0 = index, []
-       if input.index(')', index) == index
+       if has_terminal?(')', false, index)
          r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
          @index += 1
        else
@@ -840,7 +840,7 @@ module Anagram
 
        s0, i0 = [], index
        loop do
-         if input.index(Regexp.new('[\\s]'), index) == index
+         if has_terminal?('[\\s]', true, index)
            r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
@@ -870,7 +870,7 @@ module Anagram
        i0 = index
        s1, i1 = [], index
        loop do
-         if input.index(Regexp.new('[\\s]'), index) == index
+         if has_terminal?('[\\s]', true, index)
            r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
@@ -892,7 +892,7 @@ module Anagram
          r0 = r1
        else
          i3 = index
-         if input.index('(', index) == index
+         if has_terminal?('(', false, index)
            r4 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
@@ -929,7 +929,7 @@ module Anagram
        i0 = index
        s1, i1 = [], index
        loop do
-         if input.index(Regexp.new('[\\s]'), index) == index
+         if has_terminal?('[\\s]', true, index)
            r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
@@ -951,7 +951,7 @@ module Anagram
          r0 = r1
        else
          i3 = index
-         if input.index('(', index) == index
+         if has_terminal?('(', false, index)
            r4 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
@@ -968,7 +968,7 @@ module Anagram
            r0 = r3
          else
            i5 = index
-           if input.index(Regexp.new('[.]'), index) == index
+           if has_terminal?('[.]', true, index)
              r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
              @index += 1
            else
@@ -1012,7 +1012,7 @@ module Anagram
    end
 
    class Parser < Treetop::Runtime::CompiledParser
-     include ParserMethods
+     include ParseMethods
    end
 
 		end

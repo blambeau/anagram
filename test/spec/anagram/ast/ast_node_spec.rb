@@ -41,6 +41,11 @@ module NodeSpec
       node.select(0..10).should == []
       node.select(Lit).should == []
       node.select(:left, :right).should == []
+      node.select(:unexistant).should be_nil
+      node.select(:unexistant, :unexistant2).should == []
+      lambda { node.select(nil) }.should raise_error
+      lambda { node.select(nil, nil) }.should raise_error
+      lambda { node.select(:left, nil) }.should raise_error
     end
     it "raises an error when trying to add child" do
       lambda {node.add_child(:first, 12)}.should raise_error
@@ -80,6 +85,11 @@ module NodeSpec
       node.select(0..10).should == []
       node.select(Lit).should == []
       node.select(:left, :right).should == []
+      node.select(:unexistant).should be_nil
+      node.select(:unexistant, :unexistant2).should == []
+      lambda { node.select(nil) }.should raise_error
+      lambda { node.select(nil, nil) }.should raise_error
+      lambda { node.select(:left, nil) }.should raise_error
     end
     it "accepts new children, with different call forms" do
       node.add_child(:left, Anagram::Ast::Leaf.new(12, Lit))

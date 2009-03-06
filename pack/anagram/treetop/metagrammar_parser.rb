@@ -3,6 +3,7 @@ module Anagram
     module TreetopMeta
 	    module Grammar
        include Treetop::Runtime
+       include Anagram::Pack::TreetopMeta::SyntaxTypes
 
        def root
          @root || :treetop_file
@@ -121,7 +122,7 @@ module Anagram
 
          i0, s0 = index, []
          i1, s1 = index, []
-         if input.index('module', index) == index
+         if has_terminal?('module', false, index)
            r2 = instantiate_node(SyntaxNode,input, index...(index + 6))
            @index += 6
          else
@@ -169,7 +170,7 @@ module Anagram
              r10 = _nt_space
              s9 << r10
              if r10
-               if input.index('end', index) == index
+               if has_terminal?('end', false, index)
                  r11 = instantiate_node(SyntaxNode,input, index...(index + 3))
                  @index += 3
                else
@@ -239,7 +240,7 @@ module Anagram
          end
 
          i0, s0 = index, []
-         if input.index('grammar', index) == index
+         if has_terminal?('grammar', false, index)
            r1 = instantiate_node(SyntaxNode,input, index...(index + 7))
            @index += 7
          else
@@ -258,7 +259,7 @@ module Anagram
                s0 << r4
                if r4
                  i6, s6 = index, []
-                 if input.index('do', index) == index
+                 if has_terminal?('do', false, index)
                    r7 = instantiate_node(SyntaxNode,input, index...(index + 2))
                    @index += 2
                  else
@@ -298,7 +299,7 @@ module Anagram
                        end
                        s0 << r11
                        if r11
-                         if input.index('end', index) == index
+                         if has_terminal?('end', false, index)
                            r13 = instantiate_node(SyntaxNode,input, index...(index + 3))
                            @index += 3
                          else
@@ -374,7 +375,7 @@ module Anagram
          end
 
          i0, s0 = index, []
-         if input.index('include', index) == index
+         if has_terminal?('include', false, index)
            r1 = instantiate_node(SyntaxNode,input, index...(index + 7))
            @index += 7
          else
@@ -492,7 +493,7 @@ module Anagram
          end
 
          i0, s0 = index, []
-         if input.index('rule', index) == index
+         if has_terminal?('rule', false, index)
            r1 = instantiate_node(SyntaxNode,input, index...(index + 4))
            @index += 4
          else
@@ -511,7 +512,7 @@ module Anagram
                s0 << r4
                if r4
                  i6, s6 = index, []
-                 if input.index('do', index) == index
+                 if has_terminal?('do', false, index)
                    r7 = instantiate_node(SyntaxNode,input, index...(index + 2))
                    @index += 2
                  else
@@ -543,7 +544,7 @@ module Anagram
                      r10 = _nt_space
                      s0 << r10
                      if r10
-                       if input.index('end', index) == index
+                       if has_terminal?('end', false, index)
                          r11 = instantiate_node(SyntaxNode,input, index...(index + 3))
                          @index += 3
                        else
@@ -642,7 +643,7 @@ module Anagram
              end
              s3 << r4
              if r4
-               if input.index('/', index) == index
+               if has_terminal?('/', false, index)
                  r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
                  @index += 1
                else
@@ -948,7 +949,7 @@ module Anagram
          r4 = _nt_label_name
          s3 << r4
          if r4
-           if input.index(':', index) == index
+           if has_terminal?(':', false, index)
              r5 = instantiate_node(SyntaxNode,input, index...(index + 1))
              @index += 1
            else
@@ -967,7 +968,7 @@ module Anagram
          if r3
            r2 = r3
          else
-           if input.index('', index) == index
+           if has_terminal?('', false, index)
              r6 = instantiate_node(SyntaxNode,input, index...(index + 0))
              @index += 0
            else
@@ -1107,7 +1108,7 @@ module Anagram
              r0 = r2
            else
              i3, s3 = index, []
-             if input.index('(', index) == index
+             if has_terminal?('(', false, index)
                r4 = instantiate_node(SyntaxNode,input, index...(index + 1))
                @index += 1
              else
@@ -1135,7 +1136,7 @@ module Anagram
                    end
                    s3 << r8
                    if r8
-                     if input.index(')', index) == index
+                     if has_terminal?(')', false, index)
                        r10 = instantiate_node(SyntaxNode,input, index...(index + 1))
                        @index += 1
                      else
@@ -1214,7 +1215,7 @@ module Anagram
 
          i0 = index
          i1, s1 = index, []
-         if input.index('"', index) == index
+         if has_terminal?('"', false, index)
            r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
@@ -1227,7 +1228,7 @@ module Anagram
            loop do
              i4, s4 = index, []
              i5 = index
-             if input.index('"', index) == index
+             if has_terminal?('"', false, index)
                r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
                @index += 1
              else
@@ -1243,7 +1244,7 @@ module Anagram
              s4 << r5
              if r5
                i7 = index
-               if input.index("\\\\", index) == index
+               if has_terminal?("\\\\", false, index)
                  r8 = instantiate_node(SyntaxNode,input, index...(index + 2))
                  @index += 2
                else
@@ -1253,7 +1254,7 @@ module Anagram
                if r8
                  r7 = r8
                else
-                 if input.index('\"', index) == index
+                 if has_terminal?('\"', false, index)
                    r9 = instantiate_node(SyntaxNode,input, index...(index + 2))
                    @index += 2
                  else
@@ -1296,7 +1297,7 @@ module Anagram
            r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
            s1 << r3
            if r3
-             if input.index('"', index) == index
+             if has_terminal?('"', false, index)
                r11 = instantiate_node(SyntaxNode,input, index...(index + 1))
                @index += 1
              else
@@ -1317,7 +1318,7 @@ module Anagram
            r0 = r1
          else
            i12, s12 = index, []
-           if input.index("'", index) == index
+           if has_terminal?("'", false, index)
              r13 = instantiate_node(SyntaxNode,input, index...(index + 1))
              @index += 1
            else
@@ -1330,7 +1331,7 @@ module Anagram
              loop do
                i15, s15 = index, []
                i16 = index
-               if input.index("'", index) == index
+               if has_terminal?("'", false, index)
                  r17 = instantiate_node(SyntaxNode,input, index...(index + 1))
                  @index += 1
                else
@@ -1346,7 +1347,7 @@ module Anagram
                s15 << r16
                if r16
                  i18 = index
-                 if input.index("\\\\", index) == index
+                 if has_terminal?("\\\\", false, index)
                    r19 = instantiate_node(SyntaxNode,input, index...(index + 2))
                    @index += 2
                  else
@@ -1356,7 +1357,7 @@ module Anagram
                  if r19
                    r18 = r19
                  else
-                   if input.index("\\'", index) == index
+                   if has_terminal?("\\'", false, index)
                      r20 = instantiate_node(SyntaxNode,input, index...(index + 2))
                      @index += 2
                    else
@@ -1399,7 +1400,7 @@ module Anagram
              r14 = instantiate_node(SyntaxNode,input, i14...index, s14)
              s12 << r14
              if r14
-               if input.index("'", index) == index
+               if has_terminal?("'", false, index)
                  r22 = instantiate_node(SyntaxNode,input, index...(index + 1))
                  @index += 1
                else
@@ -1420,7 +1421,7 @@ module Anagram
              r0 = r12
            else
              i23, s23 = index, []
-             if input.index('[', index) == index
+             if has_terminal?('[', false, index)
                r24 = instantiate_node(SyntaxNode,input, index...(index + 1))
                @index += 1
              else
@@ -1433,7 +1434,7 @@ module Anagram
                loop do
                  i26, s26 = index, []
                  i27 = index
-                 if input.index(']', index) == index
+                 if has_terminal?(']', false, index)
                    r28 = instantiate_node(SyntaxNode,input, index...(index + 1))
                    @index += 1
                  else
@@ -1450,7 +1451,7 @@ module Anagram
                  if r27
                    i29 = index
                    i30, s30 = index, []
-                   if input.index('\\', index) == index
+                   if has_terminal?('\\', false, index)
                      r31 = instantiate_node(SyntaxNode,input, index...(index + 1))
                      @index += 1
                    else
@@ -1480,7 +1481,7 @@ module Anagram
                    else
                      i33, s33 = index, []
                      i34 = index
-                     if input.index('\\', index) == index
+                     if has_terminal?('\\', false, index)
                        r35 = instantiate_node(SyntaxNode,input, index...(index + 1))
                        @index += 1
                      else
@@ -1541,7 +1542,7 @@ module Anagram
                end
                s23 << r25
                if r25
-                 if input.index(']', index) == index
+                 if has_terminal?(']', false, index)
                    r37 = instantiate_node(SyntaxNode,input, index...(index + 1))
                    @index += 1
                  else
@@ -1561,7 +1562,7 @@ module Anagram
              if r23
                r0 = r23
              else
-               if input.index('.', index) == index
+               if has_terminal?('.', false, index)
                  r38 = instantiate_node(AnythingSymbol,input, index...(index + 1))
                  @index += 1
                else
@@ -1633,7 +1634,7 @@ module Anagram
          end
 
          i0 = index
-         if input.index('?', index) == index
+         if has_terminal?('?', false, index)
            r1 = instantiate_node(Optional,input, index...(index + 1))
            @index += 1
          else
@@ -1643,7 +1644,7 @@ module Anagram
          if r1
            r0 = r1
          else
-           if input.index('+', index) == index
+           if has_terminal?('+', false, index)
              r2 = instantiate_node(OneOrMore,input, index...(index + 1))
              @index += 1
            else
@@ -1653,7 +1654,7 @@ module Anagram
            if r2
              r0 = r2
            else
-             if input.index('*', index) == index
+             if has_terminal?('*', false, index)
                r3 = instantiate_node(ZeroOrMore,input, index...(index + 1))
                @index += 1
              else
@@ -1683,7 +1684,7 @@ module Anagram
          end
 
          i0 = index
-         if input.index('&', index) == index
+         if has_terminal?('&', false, index)
            r1 = instantiate_node(AndPredicate,input, index...(index + 1))
            @index += 1
          else
@@ -1693,7 +1694,7 @@ module Anagram
          if r1
            r0 = r1
          else
-           if input.index('!', index) == index
+           if has_terminal?('!', false, index)
              r2 = instantiate_node(NotPredicate,input, index...(index + 1))
              @index += 1
            else
@@ -1703,7 +1704,7 @@ module Anagram
            if r2
              r0 = r2
            else
-             if input.index('~', index) == index
+             if has_terminal?('~', false, index)
                r3 = instantiate_node(Transient,input, index...(index + 1))
                @index += 1
              else
@@ -1814,7 +1815,7 @@ module Anagram
          r1 = _nt_space
          s0 << r1
          if r1
-           if input.index('<', index) == index
+           if has_terminal?('<', false, index)
              r2 = instantiate_node(SyntaxNode,input, index...(index + 1))
              @index += 1
            else
@@ -1827,7 +1828,7 @@ module Anagram
              loop do
                i4, s4 = index, []
                i5 = index
-               if input.index('>', index) == index
+               if has_terminal?('>', false, index)
                  r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
                  @index += 1
                else
@@ -1872,7 +1873,7 @@ module Anagram
              end
              s0 << r3
              if r3
-               if input.index('>', index) == index
+               if has_terminal?('>', false, index)
                  r8 = instantiate_node(SyntaxNode,input, index...(index + 1))
                  @index += 1
                else
@@ -1911,7 +1912,7 @@ module Anagram
          end
 
          i0, s0 = index, []
-         if input.index('{', index) == index
+         if has_terminal?('{', false, index)
            r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
@@ -1929,7 +1930,7 @@ module Anagram
              else
                i5, s5 = index, []
                i6 = index
-               if input.index(Regexp.new('[{}]'), index) == index
+               if has_terminal?('[{}]', true, index)
                  r7 = instantiate_node(SyntaxNode,input, index...(index + 1))
                  @index += 1
                else
@@ -1975,7 +1976,7 @@ module Anagram
            r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
            s0 << r2
            if r2
-             if input.index('}', index) == index
+             if has_terminal?('}', false, index)
                r9 = instantiate_node(SyntaxNode,input, index...(index + 1))
                @index += 1
              else
@@ -2010,7 +2011,7 @@ module Anagram
          end
 
          i0, s0 = index, []
-         if input.index(Regexp.new('[A-Z]'), index) == index
+         if has_terminal?('[A-Z]', true, index)
            r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
@@ -2020,7 +2021,7 @@ module Anagram
          if r1
            s2, i2 = [], index
            loop do
-             if input.index(Regexp.new('[A-Za-z0-9_]'), index) == index
+             if has_terminal?('[A-Za-z0-9_]', true, index)
                r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
                @index += 1
              else
@@ -2060,7 +2061,7 @@ module Anagram
          end
 
          i0, s0 = index, []
-         if input.index(Regexp.new('[A-Z]'), index) == index
+         if has_terminal?('[A-Z]', true, index)
            r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
@@ -2070,7 +2071,7 @@ module Anagram
          if r1
            s2, i2 = [], index
            loop do
-             if input.index(Regexp.new('[A-Za-z0-9_]'), index) == index
+             if has_terminal?('[A-Za-z0-9_]', true, index)
                r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
                @index += 1
              else
@@ -2126,7 +2127,7 @@ module Anagram
            s2, i2 = [], index
            loop do
              i3, s3 = index, []
-             if input.index('::', index) == index
+             if has_terminal?('::', false, index)
                r4 = instantiate_node(SyntaxNode,input, index...(index + 2))
                @index += 2
              else
@@ -2179,7 +2180,7 @@ module Anagram
          end
 
          i0, s0 = index, []
-         if input.index(Regexp.new('[a-z_]'), index) == index
+         if has_terminal?('[a-z_]', true, index)
            r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
@@ -2189,7 +2190,7 @@ module Anagram
          if r1
            s2, i2 = [], index
            loop do
-             if input.index(Regexp.new('[a-z0-9_]'), index) == index
+             if has_terminal?('[a-z0-9_]', true, index)
                r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
                @index += 1
              else
@@ -2229,7 +2230,7 @@ module Anagram
          end
 
          i0, s0 = index, []
-         if input.index(Regexp.new('[a-z_]'), index) == index
+         if has_terminal?('[a-z_]', true, index)
            r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
@@ -2239,7 +2240,7 @@ module Anagram
          if r1
            s2, i2 = [], index
            loop do
-             if input.index(Regexp.new('[a-z0-9_]'), index) == index
+             if has_terminal?('[a-z0-9_]', true, index)
                r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
                @index += 1
              else
@@ -2280,7 +2281,7 @@ module Anagram
 
          i0, s0 = index, []
          i1 = index
-         if input.index('rule', index) == index
+         if has_terminal?('rule', false, index)
            r2 = instantiate_node(SyntaxNode,input, index...(index + 4))
            @index += 4
          else
@@ -2290,7 +2291,7 @@ module Anagram
          if r2
            r1 = r2
          else
-           if input.index('end', index) == index
+           if has_terminal?('end', false, index)
              r3 = instantiate_node(SyntaxNode,input, index...(index + 3))
              @index += 3
            else
@@ -2429,7 +2430,7 @@ module Anagram
          end
 
          i0, s0 = index, []
-         if input.index('#', index) == index
+         if has_terminal?('#', false, index)
            r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
@@ -2442,7 +2443,7 @@ module Anagram
            loop do
              i3, s3 = index, []
              i4 = index
-             if input.index("\n", index) == index
+             if has_terminal?("\n", false, index)
                r5 = instantiate_node(SyntaxNode,input, index...(index + 1))
                @index += 1
              else
@@ -2503,7 +2504,7 @@ module Anagram
            return cached
          end
 
-         if input.index(Regexp.new('[ \\t\\n\\r]'), index) == index
+         if has_terminal?('[ \\t\\n\\r]', true, index)
            r0 = instantiate_node(SyntaxNode,input, index...(index + 1))
            @index += 1
          else
