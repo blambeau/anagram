@@ -5,30 +5,18 @@ module Anagram
       #
       # Pretty prints boolean expression from a semantic tree of the grammar.
       #
-      class PrettyPrinter
-  
-        # Operator priorities
-        PRIORITIES = {
-          Or => 1,
-          And => 2,
-          Not => 3,
-          Proposition => 4, 
-          Literal => 5
-        }
-  
-        # Creates a pretty printer instance and install templates
-        def initialize()
-          @engine = Anagram::Rewriting::Engine.new do
-            template Or|And do |r,n| 
-              left, op, right = r.apply(:left), r.apply(:op), r.apply(:right)
-              right = "(#{right})" if PrettyPrinter.lower_priority?(n, n.right)
-              "#{left} #{op} #{right}"
-            end
-            template Not         do |r,n| "not(#{r.apply(:right)})" end
-            template Proposition do |r,n| r.semantic_value          end
-            template Literal     do |r,n| r.semantic_value          end
-            template Operator    do |r,n| r.semantic_value          end
+      class PrettyPrinter < Anagram::Rewriting::Rewriter
+        include SemanticTree
+        PRIORITIES = {Or => 1, And => 2, Not => 3, Proposition => 4, Literal => 5}
+        configuration do
+          template Or|And do |r,n| 
+            left, op, right = r.apply(:left), r.apply(:op), r.apply(:right)
+            right = "(#{right})" if PrettyPrinter.lower_priority?(n, n.right)
+            "#{left} #{Or===n ? 'or' : 'and'} #{right}"
           end
+          template Not         do |r,n| "not(#{r.apply(:right)})" end
+          template Proposition do |r,n| r.semantic_value          end
+          template Literal     do |r,n| r.semantic_value          end
         end
     
         # Returns the priority of an Ast::Node
@@ -45,12 +33,7 @@ module Anagram
           priority_of(who) > priority_of(what)
         end
 
-        # Pretty prints from a semantic tree
-        def execute(ast)
-          @engine.execute(ast)
-        end
-        
-      end # class PrettyPrint
+      end # class PrettyPrinter
       
     end
   end

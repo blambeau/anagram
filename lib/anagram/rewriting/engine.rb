@@ -11,31 +11,20 @@ module Anagram
       include Anagram::Ast::Helper
       include Anagram::Rewriting::Engine::Methods
       
+      # Engine configuration
+      attr_reader :configuration
+      alias :config :configuration
+      
       # Creates an empty rewriter.
-      def initialize(&block)
-        @templates = {}
+      def initialize(configuration=nil, &block)
+        configuration = Configuration.new unless configuration
+        unless block.nil?
+          dsl = Anagram::Rewriting::Engine::DSL.new(configuration)
+          dsl.execute_dsl(&block)
+        end
+        @configuration = configuration
         @state = nil
-        DSL.new(self, &block) unless block.nil?
       end
-      
-      # Returns an array with recognized execution modes
-      def modes
-        @templates.keys
-      end
-      
-      # Adds a template
-      def add_template(template)
-        mode = template.mode
-        @templates[mode] = [] if @templates[mode].nil?
-        @templates[mode] << template
-        @templates[mode].sort! {|t,u| u.priority <=> t.priority}
-      end
-      
-      # Inspects installed templates.
-      def inspect
-        @templates.inspect
-      end
-
 
       ### User-oriented API ###################################################
       
@@ -49,19 +38,6 @@ module Anagram
         @state = nil
         collected.nil? ? nil : collected[0]
       end
-      alias :rewrite :execute
-      alias :produce :execute
-
-
-      ### Pluggin-oriented API ################################################
-      
-      # Provides a way for plugins to install instance variables on the engine.
-      # These instance variables will be available to template extensions during
-      # engine executions.
-      def add_instance_variable(name, value=nil)
-        self.instance_variable_set(name, value)
-      end
-
 
       ### Template-oriented API ###############################################
       
@@ -80,7 +56,7 @@ module Anagram
         mode = @state.mode
         @state = @state.push(mode)
           collected = selection.collect do |node|
-            template = @templates[mode].find {|tpl| tpl===node}
+            template = @configuration.find_matching_template(mode, node)
             unless template.nil?
               @state.context_node = node
               template.execute(self, node)

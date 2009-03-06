@@ -7,3 +7,4 @@ end
 require File.join(File.dirname(__FILE__), '..', 'vendor', 'treetop', 'lib', 'treetop')
 require 'anagram/ast'
 require 'anagram/rewriting'
+require 'anagram/pack'

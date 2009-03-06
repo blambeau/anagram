@@ -8,32 +8,32 @@ module Anagram
     #
     module Syntax2Semantics
       
-        # DRY Shortcut for <tt>context_node.text_value.strip</tt>
-        def strip()
-          self.context_node.text_value.strip
-        end
-    
-        # DRY Shortcut for <tt>context_node.text_value.strip.to_sym</tt>
-        def symbol()
-          self.context_node.text_value.strip.to_sym
-        end
-    
-        # DRY Shortcut for <tt>context_node.text_value.strip.to_i</tt>
-        def integer()
-          self.context_node.text_value.strip.to_i
-        end
-    
-        # DRY Shortcut for <tt>context_node.text_value.strip.to_i</tt>
-        def float()
-          self.context_node.text_value.strip.to_f
-        end
-    
-        # Looks for 'true' or 'false' in context_node's text_value and
-        # converts it to a Ruby boolean (trailing spaces supported)
-        def boolean()
-          return 'true'==strip() ? true : false
-        end
-    
+      # DRY Shortcut for <tt>context_node.text_value.strip</tt>
+      def strip()
+        self.context_node.text_value.strip
+      end
+  
+      # DRY Shortcut for <tt>context_node.text_value.strip.to_sym</tt>
+      def symbol()
+        self.context_node.text_value.strip.to_sym
+      end
+  
+      # DRY Shortcut for <tt>context_node.text_value.strip.to_i</tt>
+      def integer()
+        self.context_node.text_value.strip.to_i
+      end
+  
+      # DRY Shortcut for <tt>context_node.text_value.strip.to_i</tt>
+      def float()
+        self.context_node.text_value.strip.to_f
+      end
+  
+      # Looks for 'true' or 'false' in context_node's text_value and
+      # converts it to a Ruby boolean (trailing spaces supported)
+      def boolean()
+        return 'true'==strip() ? true : false
+      end
+  
     end
     
   end

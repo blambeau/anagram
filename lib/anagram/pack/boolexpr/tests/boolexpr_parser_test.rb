@@ -12,12 +12,13 @@ module Anagram
       #
       class ParserTest < Test::Unit::TestCase
         include Anagram::Pack::TestUtils
+        include Anagram::Pack::Boolexpr::SyntaxTree
 
         # Creates a Boolexpr::Parser under @parser  
         def setup
           @parser = Boolexpr::Parser.new
         end
-
+        
         # Tests the parser on different expressions, veryfing that the  is
         # as expected.
         def test_boolexpr

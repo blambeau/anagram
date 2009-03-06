@@ -50,18 +50,18 @@ class EngineTest < Test::Unit::TestCase
       template Object, 0.2 do "Object:0.2" end
       template Times,  1.0 do "Times:1.0"  end
     end
-    assert_equal("Times:1.0", r.rewrite(@ast))
-    assert_equal("Object:0.2", r.rewrite(@two))
-    assert_equal("Object:0.2", r.rewrite(@plus))
+    assert_equal("Times:1.0", r.execute(@ast))
+    assert_equal("Object:0.2", r.execute(@two))
+    assert_equal("Object:0.2", r.execute(@plus))
   
     r = Anagram::Rewriting::Engine.new do
-      default :apply_all
+      template Object, 0.5 do |r,n| r.apply_all            end
       template Times,  1.0 do "Times:1.0"                  end
       template Lit         do |r,node| node.semantic_value end
     end
-    assert_equal("Times:1.0", r.rewrite(@ast))
-    assert_equal(nil, r.rewrite(@plus))
-    assert_equal(2, r.rewrite(@two))
+    assert_equal("Times:1.0", r.execute(@ast))
+    assert_equal(nil, r.execute(@plus))
+    assert_equal(2, r.execute(@two))
   end
   
   # Tests that the rewriter respects modes
@@ -73,7 +73,7 @@ class EngineTest < Test::Unit::TestCase
       mode :other
       template Times do |r,n| "Times" end
     end
-    assert_equal("Times", r.rewrite(@ast))
+    assert_equal("Times", r.execute(@ast))
   
     r = Anagram::Rewriting::Engine.new do
       mode :main
@@ -85,14 +85,13 @@ class EngineTest < Test::Unit::TestCase
       mode :third
       template Times do |r,n| "Times" end
     end
-    assert_equal("Times", r.rewrite(@ast))
+    assert_equal("Times", r.execute(@ast))
   end
   
   # Tests that an evaluator can be implemented easily and correctly
   def test_it_allows_simple_evaluation
     interpretation = {"x" => 5, "y" => 10}
     r = Anagram::Rewriting::Engine.new do
-      #default :raise
       template Plus   do |r,n| r.apply(n.left)+r.apply(n.right)    end
       template Times  do |r,n| r.apply(n.left)*r.apply(n.right)    end
       template Paren  do |r,n| r.apply(0)                          end

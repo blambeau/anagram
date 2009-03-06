@@ -7,23 +7,6 @@ module Anagram
     module AstRewriting
       include Anagram::Ast::Helper
 
-      # Extensions to the engine DSL
-      module DSLExtensions
-        
-        # Consider only types when applying type rewriting.
-        def keep_types(*types)
-          types = types[0] if (types.length==1 and Array===types)
-          engine.add_instance_variable(:@kept_types, types)
-        end
-      
-        # Uses the following type correspondance Hash when applying type rewriting.
-        def type_rewrite(hash)
-          engine.add_instance_variable(:@type_rewriting, hash)
-        end
-      
-      end
-
-
       ### Helpers for type rewriting ##########################################
       
       # Rewrites types inside _types_ array.

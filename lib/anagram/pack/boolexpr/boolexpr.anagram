@@ -1,0 +1,101 @@
+module Anagram
+  module Pack
+		#
+		# Defines a Treetop grammar for boolean expressions. Modules referenced by this
+		# grammar can be found in boolexpr_types.rb
+		#
+		# Parentheses and spaces are free. By default, propositions must be lower case 
+		# identifiers and cannot start with a keyword (that is, 'truex', 'andmyjoy', ... 
+		# are not valid propositions). Double quoted propositions are supported as well, 
+		# accepting any character even spaces (backslash a double quoted appearing
+		# in the identifier name).
+		#
+		# Author: Bernard Lambeau <blambeau at gmail dot com>
+		#
+		grammar Boolexpr
+
+		  ### Main rules ####################################################
+		  rule bool_ast
+		    boolexpr_dyadic                                      <SyntaxTree>
+		  end
+
+		  ### Dyadic expr ###################################################
+		  rule boolexpr_dyadic
+		    boolexpr_or
+		  end
+		  rule boolexpr_or
+		      left:boolexpr_and op:or_kw right:boolexpr_or               <Or>
+		    / boolexpr_and
+		  end
+		  rule boolexpr_and
+		      left:boolexpr_monadic op:and_kw right:boolexpr_and        <And>
+		    / boolexpr_monadic
+		  end
+
+		  ### Monadic expr ##################################################
+		  rule boolexpr_monadic
+		      boolexpr_proposition                              <Proposition>
+		    / boolexpr_literal                                      <Literal>
+		    / boolexpr_not                                              <Not>
+		    / boolexpr_parenthesized                          <Parenthesized>
+		  end
+		  rule boolexpr_proposition
+		      !keyword identifier:[a-z]+ boolexpr_spaces_or_eof
+		    / ["] identifier:([\\] ["] / !["] .)+ ["] boolexpr_spaces_or_eof
+		  end
+		  rule boolexpr_literal
+		      ('true' / 'false') boolexpr_spaces_or_eof
+		  end
+		  rule boolexpr_not
+		      op:not_kw right:boolexpr_monadic
+		  end
+		  rule boolexpr_parenthesized
+		      openpar_sym root:boolexpr_dyadic closepar_sym
+		  end
+
+		  ### Keywords and symbols ##########################################
+		  rule boolexpr_keyword
+		      'and'
+		    / 'or'
+		    / 'not'
+		    / 'true'
+		    / 'false'
+		  end
+		  rule or_kw
+		    'or' boolexpr_spaces                                   <Operator>
+		  end
+		  rule and_kw 
+		    'and' boolexpr_spaces                                  <Operator>
+		  end
+		  rule not_kw
+		    'not' boolexpr_spaces                                  <Operator>
+		  end
+		  rule openpar_sym
+		    '(' boolexpr_spacing
+		  end
+		  rule closepar_sym
+		    ')' boolexpr_spacing
+		  end
+
+		  ### Spaces ########################################################
+		  rule boolexpr_spacing
+		    # eat all spaces
+		    [\s]*           
+		  end
+		  rule boolexpr_spaces
+		    # at least one space or a parenthesis
+		    [\s]+ / &'('
+		  end
+		  rule boolexpr_spaces_or_eof
+		    # at least one space, a parenthesis, or EOF
+		    [\s]+ / &'(' / ![.]
+		  end
+
+		  ### Intended to be overriden ######################################
+		  rule keyword
+		    boolexpr_keyword
+		  end
+		
+	  end
+  end
+end
