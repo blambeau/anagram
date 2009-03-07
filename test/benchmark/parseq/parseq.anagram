@@ -1,0 +1,20 @@
+grammar ParSeq
+
+  rule statement
+    par / seq / task 
+  end
+  rule statement_list
+    statement ([\s]+ statement)*
+  end
+  rule par
+    'par' [\s]+ statement_list [\s]+ 'end'
+  end
+  rule seq
+    'seq' [\s]+ statement_list [\s]+ 'end'
+  end
+  rule task
+    [A-Z] [A-Za-z0-9]*
+  end
+
+
+end
