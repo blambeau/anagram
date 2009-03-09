@@ -5,15 +5,17 @@ module Anagram
       # Provides Domain Specific Language of Anagram's rewriting engine.
       class DSL
         
-        # Configuration under building
-        attr_reader :configuration
-        
         # Creates a DSL instance and executes the given block in
         # the context of the given engine.
         def initialize(configuration, &block)
           raise ArgumentError, "Configuration cannot be nil" if configuration.nil?
           @configuration, @mode = configuration, :main
           execute_dsl(&block) unless block.nil?
+        end
+        
+        # Returns the current in_mode config
+        def config
+          @configuration.get_inmode_config(@mode, true)
         end
         
         # Lauches DSL execution on a given block
@@ -25,14 +27,16 @@ module Anagram
         end
         
         # Sets the mode to use for following template instantiations.
-        def mode(mode=nil)
-          @mode = mode unless mode.nil?
-          @mode
+        def mode(mode, &block)
+          raise ArgumentError, "Block expected for mode" unless block_given?
+          old_mode, @mode = @mode, mode
+          instance_eval &block
+          @mode = old_mode
         end
         
         # Adds a template using the given block
         def template(match, priority = 1.0, &block)
-          @configuration.add_template(Template.new(match, @mode, priority, &block))
+          config.add_template(Template.new(match, @mode, priority, &block))
         end
       
       end # class DSL

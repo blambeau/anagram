@@ -2,37 +2,29 @@ module Anagram
   module Rewriting
     class Engine
       
-      # Encapsulates a complete engine configuration.
-      class Configuration
+      # Configuration in a given mode
+      class InModeConfig
         
         # Creates an empty configuration
         def initialize
-          @templates = {}
+          @templates = []
           @plugin_config = {}
         end
         
-        # Returns an array with all recognized execution modes
-        def modes
-          @templates.keys
-        end
-      
         # Adds a template
         def add_template(template)
-          mode = template.mode
-          @templates[mode] = [] if @templates[mode].nil?
-          @templates[mode] << template
-          @templates[mode].sort! {|t,u| u.priority <=> t.priority}
+          @templates << template
+          @templates.sort! {|t,u| u.priority <=> t.priority}
         end
         
         # Finds a matching template
-        def find_matching_template(mode, context_node)
-          return nil unless @templates[mode]
-          @templates[mode].find {|tpl| tpl===context_node}
+        def find_matching_template(context_node)
+          @templates.find {|tpl| tpl===context_node}
         end
         
-        # Returns the configuration of a given plugin
-        def [](who)
-          unless @plugin_config[who]
+        # Returns configuration of a plugin
+        def get_plugin_config(plugin)
+          unless @plugin_config[plugin]
             hash = {}
             def hash.method_missing(name, *args)
               name = name.to_s
@@ -42,16 +34,35 @@ module Anagram
                 self[name]
               end
             end
-            @plugin_config[who] = hash
+            @plugin_config[plugin] = hash
           end
-          @plugin_config[who]
+          @plugin_config[plugin]
         end
-      
+        alias :[] :get_plugin_config
+        
         # Inspects installed templates.
         def inspect
           @templates.inspect
         end
 
+      end # class InModeConfig
+      
+      # Encapsulates a complete engine configuration.
+      class Configuration
+        
+        # Creates an empty configuration
+        def initialize
+          @in_mode_config = {}
+        end
+        
+        # Adds a mode
+        def get_inmode_config(mode, create=false)
+          if @in_mode_config[mode].nil? and create
+            @in_mode_config[mode] = InModeConfig.new
+          end
+          @in_mode_config[mode]
+        end
+      
       end # class Configuration
       
     end

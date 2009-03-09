@@ -35,7 +35,7 @@ module EngineDSLSpec
     end
     
     it "is not ruby intrusive" do
-      Anagram::Rewriting::Engine::DSL.new(engine.config) do
+      Anagram::Rewriting::Engine::DSL.new(engine.configuration) do
         template Lit|Plus do |r,n| "found"     end 
         template Lit&Plus do |r,n| "found"     end 
       end
@@ -43,7 +43,7 @@ module EngineDSLSpec
     end
     
     it "accepts or matchers" do
-      Anagram::Rewriting::Engine::DSL.new(engine.config) do
+      Anagram::Rewriting::Engine::DSL.new(engine.configuration) do
         template Times    do |r,n| r.apply_all end
         template Lit|Plus do |r,n| "found"     end 
       end
@@ -51,7 +51,7 @@ module EngineDSLSpec
     end
     
     it "accepts and matchers" do
-      Anagram::Rewriting::Engine::DSL.new(engine.config) do
+      Anagram::Rewriting::Engine::DSL.new(engine.configuration) do
         template Times    do |r,n| r.apply_all end
         template Lit&Plus do |r,n| "found"     end 
       end

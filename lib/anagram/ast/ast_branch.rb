@@ -79,6 +79,15 @@ module Anagram
       end
            
       ### Write API ###########################################################
+         
+      # Bulk set children   
+      def children=(children)
+        @children, @child_keys = children, {}
+        @children.each_with_index do |child,i|
+          key = child.key_in_parent
+          @child_keys[key] = i unless key.nil?
+        end
+      end
             
       #
       # Pushes _child_ as last element in the children array. Associates it with 

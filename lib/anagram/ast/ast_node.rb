@@ -25,7 +25,6 @@ module Anagram
       # SourceInterval instance when source tracking is used.
       attr_accessor :source_interval
 
-
       ### Construction API ####################################################
 
       # Creates a node instance and extend it with modules given by _types_
@@ -47,6 +46,12 @@ module Anagram
           self.extend(mod) if Module===mod
           @semantic_types << mod
         end
+      end
+      
+      # Let the node know under which key it is installed in his parent.
+      # This method is not expected to be used by users.
+      def key_in_parent=(key)
+        @key_in_parent = key
       end
       
       ### Write API ###########################################################
@@ -80,12 +85,6 @@ module Anagram
         @parent, @key_in_parent = nil
       end
       
-      # Let the node know under which key it is installed in his parent.
-      # This method is not expected to be used by users.
-      def key_in_parent=(key)
-        @key_in_parent = key
-      end
-      
       ### Debug API ###########################################################
       public
       
@@ -94,9 +93,18 @@ module Anagram
         self.debug("")
       end
 
-
-      ### Backward-compatibility API ##########################################
+      ### Source API ##########################################################
       
+      # Returns start offset in source
+      def start_index 
+        @source_interval.start_index
+      end
+
+      # Returns stop offset in source
+      def stop_index 
+        @source_interval.stop_index
+      end
+
       # Returns the complete source text that led to this node creation.
       #
       # This method exists for backward compatibility with older versions of 
@@ -112,6 +120,8 @@ module Anagram
       def text_value
         @source_interval.nil? ? "" : @source_interval.text_value
       end
+      
+      ### Backward-compatibility API ##########################################
       
       # Delegated to source_interval if any; returns nil otherwise.
       #

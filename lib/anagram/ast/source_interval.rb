@@ -11,6 +11,7 @@ module Anagram
       
       # Input source
       attr_reader :source
+      alias :input :source
       
       # Interval in source
       attr_reader :interval
@@ -18,6 +19,16 @@ module Anagram
       # Creates a position instance
       def initialize(source, interval)
         @source, @interval = source, interval
+      end
+      
+      # Returns begin point of the interval
+      def start_index
+        @interval.begin
+      end
+      
+      # Returns end point of the interval
+      def stop_index
+        @interval.end
       end
       
       # Returns the text value of his source interval

@@ -69,7 +69,7 @@ module Anagram
       
       # Raises an exception as leaf nodes do not accept children.
       def <<(key_and_child)
-        raise "Leaf nodes don't accept children (request was: #{key.inspect} => #{child.inspect})"
+        raise "Leaf nodes don't accept children (request was: #{key_and_child.inspect})"
       end
       
       

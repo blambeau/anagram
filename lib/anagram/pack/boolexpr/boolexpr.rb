@@ -17,8 +17,8 @@ module Anagram
       
       # Converts a syntax tree to a semantic tree
       Syntax2Semantics =  Anagram::Rewriting::Rewriter.new do
-        type_rewrite SyntaxTree => SemanticTree
         configuration do
+          type_rewrite SyntaxTree => SemanticTree
           template SyntaxTree::Or            do |r, node| r.copy(:left, :right)     end
           template SyntaxTree::And           do |r, node| r.copy(:left, :right)     end
           template SyntaxTree::Not           do |r, node| r.copy(:right)            end

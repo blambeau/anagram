@@ -67,23 +67,26 @@ class EngineTest < Test::Unit::TestCase
   # Tests that the rewriter respects modes
   def test_it_respects_modes
     r = Anagram::Rewriting::Engine.new do
-      mode :main
-      template Times do |r,n| r.in_mode(:other) {r.apply(n)} end
+      mode :main do
+        template Times do |r,n| r.in_mode(:other) {r.apply(n)} end
+      end
       
-      mode :other
-      template Times do |r,n| "Times" end
+      mode :other do
+        template Times do |r,n| "Times" end
+      end
     end
     assert_equal("Times", r.execute(@ast))
   
     r = Anagram::Rewriting::Engine.new do
-      mode :main
-      template Times do |r,n| r.in_mode(:other) {r.apply(n)} end
-      
-      mode :other
-      template Times do |r,n| r.in_mode(:third) {r.apply(n)} end
-        
-      mode :third
-      template Times do |r,n| "Times" end
+      mode :main do
+        template Times do |r,n| r.in_mode(:other) {r.apply(n)} end
+      end
+      mode :other do
+        template Times do |r,n| r.in_mode(:third) {r.apply(n)} end
+      end
+      mode :third do
+        template Times do |r,n| "Times" end
+      end
     end
     assert_equal("Times", r.execute(@ast))
   end

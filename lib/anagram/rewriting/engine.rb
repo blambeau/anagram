@@ -11,9 +11,11 @@ module Anagram
       include Anagram::Ast::Helper
       include Anagram::Rewriting::Engine::Methods
       
-      # Engine configuration
+      # Configuration
       attr_reader :configuration
-      alias :config :configuration
+      
+      # Engine state
+      attr_reader :state
       
       # Creates an empty rewriter.
       def initialize(configuration=nil, &block)
@@ -39,6 +41,18 @@ module Anagram
         collected.nil? ? nil : collected[0]
       end
 
+      ### Configuration & mode ################################################
+      
+      # Returns engine current execution mode
+      def current_mode
+        @state.mode
+      end
+      
+      # Returns current InModeConfig
+      def config
+        @configuration.get_inmode_config(current_mode)
+      end
+      
       ### Template-oriented API ###############################################
       
       #
@@ -56,7 +70,7 @@ module Anagram
         mode = @state.mode
         @state = @state.push(mode)
           collected = selection.collect do |node|
-            template = @configuration.find_matching_template(mode, node)
+            template = config.find_matching_template(node)
             unless template.nil?
               @state.context_node = node
               template.execute(self, node)
@@ -126,9 +140,13 @@ module Anagram
         r
       end
       
-      # Returns engine current execution mode
-      def current_mode
-        @state.mode
+      # Pushes some context objects and yields block
+      def with(hash) 
+        @state = @state.push(current_mode)
+        hash.each_pair {|k,v| @state[k]=v}
+        r = block_given? ? yield(self, context_node) : nil
+        @state = @state.pop
+        r
       end
       
       # Returns the current context node.

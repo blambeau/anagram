@@ -1,6 +1,6 @@
 module ByHandmade
 
-  class ParSeqParser < Anagram::CompiledParser
+  class ParSeqParser < Anagram::Parsing::CompiledParser
     
     def statement(r0)
       par(r0) or seq(r0) or task(r0)
@@ -8,7 +8,7 @@ module ByHandmade
   
     def statement_list(r0)
       r1 = statement(r0) and
-      r2 = zeroormore(r1) do |r20|
+      r2 = zero_or_more(r1) do |r20|
              r21 = spaces(r20) and
              r22 = statement(r21) and
              accumulate(r20, r21, r22)
@@ -53,13 +53,13 @@ module ByHandmade
   class ParSeqParserNoRegexp < ParSeqParser
     
     def spaces(r0)
-      oneormore(r0) do |r00|
+      one_or_more(r0) do |r00|
         regexp(r00, '[\s]')
       end
     end
     
     def alphanum(r0)
-      oneormore(r0) do |r00|
+      one_or_more(r0) do |r00|
         regexp(r00, '[A-Za-z0-9]')
       end
     end

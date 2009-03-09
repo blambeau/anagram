@@ -1,7 +1,6 @@
 dir = File.dirname(__FILE__)
 $LOAD_PATH << File.join(dir, '..', '..', 'lib')
 require 'anagram'
-require File.join(dir, 'compiled_parser')
 require File.join(dir, 'parseq_treetop')
 require File.join(dir, 'parseq_anagram')
 require File.join(dir, 'parseq_handmade')

@@ -2,8 +2,9 @@ module Anagram
   module Pack
     module Anagrammar
       module ParserMethods
-        include Anagram::Pack::Anagrammar::SyntaxTree
         include Treetop::Runtime
+  		  include Anagram::Pack::Anagrammar::SyntaxTree
+
 
         def root
           @root || :treetop_file
@@ -726,115 +727,6 @@ module Anagram
           return r0
         end
 
-        module Primary0
-          def prefix
-            elements[0]
-          end
-
-          def atomic
-            elements[1]
-          end
-        end
-
-        module Primary1
-          def atomic
-            elements[0]
-          end
-
-          def suffix
-            elements[1]
-          end
-
-          def node_type_declarations
-            elements[2]
-          end
-        end
-
-        module Primary2
-          def atomic
-            elements[0]
-          end
-
-          def node_type_declarations
-            elements[1]
-          end
-        end
-
-        def _nt_primary
-          start_index = index
-          if node_cache[:primary].has_key?(index)
-            cached = node_cache[:primary][index]
-            @index = cached.interval.end if cached
-            return cached
-          end
-
-          i0 = index
-          i1, s1 = index, []
-          r2 = _nt_prefix
-          s1 << r2
-          if r2
-            r3 = _nt_atomic
-            s1 << r3
-          end
-          if s1.last
-            r1 = instantiate_node(Primary,input, i1...index, s1)
-            r1.extend(Primary0)
-          else
-            self.index = i1
-            r1 = nil
-          end
-          if r1
-            r0 = r1
-          else
-            i4, s4 = index, []
-            r5 = _nt_atomic
-            s4 << r5
-            if r5
-              r6 = _nt_suffix
-              s4 << r6
-              if r6
-                r7 = _nt_node_type_declarations
-                s4 << r7
-              end
-            end
-            if s4.last
-              r4 = instantiate_node(Primary,input, i4...index, s4)
-              r4.extend(Primary1)
-            else
-              self.index = i4
-              r4 = nil
-            end
-            if r4
-              r0 = r4
-            else
-              i8, s8 = index, []
-              r9 = _nt_atomic
-              s8 << r9
-              if r9
-                r10 = _nt_node_type_declarations
-                s8 << r10
-              end
-              if s8.last
-                r8 = instantiate_node(Primary,input, i8...index, s8)
-                r8.extend(Primary2)
-              else
-                self.index = i8
-                r8 = nil
-              end
-              if r8
-                r0 = r8
-              else
-                self.index = i0
-                r0 = nil
-              end
-            end
-          end
-
-          node_cache[:primary][start_index] = r0
-
-          return r0
-        end
-
         module Sequence0
           def space
             elements[0]
@@ -1079,6 +971,115 @@ module Anagram
           end
 
           node_cache[:sequence_primary][start_index] = r0
+
+          return r0
+        end
+
+        module Primary0
+          def prefix
+            elements[0]
+          end
+
+          def atomic
+            elements[1]
+          end
+        end
+
+        module Primary1
+          def atomic
+            elements[0]
+          end
+
+          def suffix
+            elements[1]
+          end
+
+          def node_type_declarations
+            elements[2]
+          end
+        end
+
+        module Primary2
+          def atomic
+            elements[0]
+          end
+
+          def node_type_declarations
+            elements[1]
+          end
+        end
+
+        def _nt_primary
+          start_index = index
+          if node_cache[:primary].has_key?(index)
+            cached = node_cache[:primary][index]
+            @index = cached.interval.end if cached
+            return cached
+          end
+
+          i0 = index
+          i1, s1 = index, []
+          r2 = _nt_prefix
+          s1 << r2
+          if r2
+            r3 = _nt_atomic
+            s1 << r3
+          end
+          if s1.last
+            r1 = instantiate_node(Primary,input, i1...index, s1)
+            r1.extend(Primary0)
+          else
+            self.index = i1
+            r1 = nil
+          end
+          if r1
+            r0 = r1
+          else
+            i4, s4 = index, []
+            r5 = _nt_atomic
+            s4 << r5
+            if r5
+              r6 = _nt_suffix
+              s4 << r6
+              if r6
+                r7 = _nt_node_type_declarations
+                s4 << r7
+              end
+            end
+            if s4.last
+              r4 = instantiate_node(Primary,input, i4...index, s4)
+              r4.extend(Primary1)
+            else
+              self.index = i4
+              r4 = nil
+            end
+            if r4
+              r0 = r4
+            else
+              i8, s8 = index, []
+              r9 = _nt_atomic
+              s8 << r9
+              if r9
+                r10 = _nt_node_type_declarations
+                s8 << r10
+              end
+              if s8.last
+                r8 = instantiate_node(Primary,input, i8...index, s8)
+                r8.extend(Primary2)
+              else
+                self.index = i8
+                r8 = nil
+              end
+              if r8
+                r0 = r8
+              else
+                self.index = i0
+                r0 = nil
+              end
+            end
+          end
+
+          node_cache[:primary][start_index] = r0
 
           return r0
         end
@@ -2516,18 +2517,20 @@ module Anagram
           return r0
         end
 
-      end # module ParserMethods
-      
+      end
+
       class Parser < Treetop::Runtime::CompiledParser
         include ParserMethods
         
         # Lauches the parsing
-        def self.<<(arg)
-          Anagram::Ast[self.new.parse_or_fail(arg)]
+        def self.<<(arg, rule=nil)
+          t1 = Time.now
+          r = self.new.parse_or_fail(arg, rule)
+          t2 = Time.now
+          puts "Treetop parsed in #{t2-t1} ms."
+          Anagram::Ast[r]
         end
-        
-      end # class Parser
-  
+      end
     end
   end
 end

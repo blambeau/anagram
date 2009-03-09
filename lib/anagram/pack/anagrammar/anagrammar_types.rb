@@ -38,6 +38,7 @@ module Anagram
       module SemanticTree
         include CommonTypes
       end
+      module RubyCode; end
     end
   end
 end

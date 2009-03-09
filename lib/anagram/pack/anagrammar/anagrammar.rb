@@ -8,7 +8,8 @@ rescue LoadError => ex
 end
 require File.join(dir, "anagrammar_types")
 require File.join(dir, "anagrammar_parser")
-require File.join(dir, "anagrammar_syntax2semantics")
+require File.join(dir, "anagrammar_s2s")
+require File.join(dir, "anagrammar_ruby")
 
 module Anagram
   module Pack
@@ -18,6 +19,7 @@ module Anagram
       # Rewriting rules
       rewriting String, SyntaxTree, Parser
       rewriting SyntaxTree, SemanticTree, Syntax2Semantics
+      rewriting SemanticTree, RubyCode, RubyCompiler
       
       # Parses an input source and returns a SyntaxTree
       def self.syntax_tree(input)
@@ -29,18 +31,13 @@ module Anagram
         apply_rewriting(input, SemanticTree)
       end
       
+      # Generates ruby code from a grammar
+      def self.to_ruby_code(input)
+        input = syntax_tree(input) if String===input
+        input = semantic_tree(input) if SyntaxTree===input
+        apply_rewriting(input, RubyCode)
+      end
+      
     end
   end
 end
-
-t1 = Time.now
-syntax_tree = Anagram::Pack::Anagrammar.syntax_tree(File.read(File.join(dir,'anagrammar.anagram')))
-t2 = Time.now
-puts "Parsing + convertion took #{t2-t1} ms."
-
-t1 = Time.now
-sem_tree = Anagram::Pack::Anagrammar.semantic_tree(syntax_tree)
-t2 = Time.now
-puts "Rewriting took #{t2-t1} ms."
-#puts sem_tree.inspect
-#puts res.inspect

@@ -1,0 +1,86 @@
+=~{Anagram::Pack::Anagrammar::SemanticTree}{
+  ${n.prefix}
+    +~{n.module_or_grammar}
+  ${n.suffix}
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::ModuleDecl}{
+  ${n.prefix}
+    +~{n.module_contents}
+  ${n.suffix}
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::Grammar}{
+  module ${n.grammar_name}
+    
+    module ParserMethods
+      *{n.include_list as i}{+~{i}}
+      *{n.parsing_rule_list as r}{+~{r}}{!{"\n"}}
+    end
+    
+    class Parser < Anagram::Parsing::CompiledParser
+      include ParserMethods
+      def self.<<(input, rule=nil)
+        self.parse(input, rule)
+      end
+    end
+  end
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::Include}{
+  include ${n.module_name}!{"\n"}
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::ParsingRule}{
+  def _nt_${n.rule_name}(r)
+    result=already_found?(r, :${n.rule_name})
+    return result unless result.nil?
+    result = (+~{n.parsing_expression with prev: 'r'})
+    (memoize r, :${n.rule_name}, result)
+  end
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::Choice}{
+  *{n as c}{(+~{c with prev: prev})}{ or!{"\n"}}
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::Sequence}{
+  *{n using each_with_index as c, i}{${prev}_${i+1} = (+~{c with prev: '?{i==0}{+{prev}}{+{prev}_+{i}}'})}{ and!{"\n"}} and
+  (accumulate ${prev}, *{n using each_with_index as c, i}{${prev}_${i+1}}{, })
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::Labeled}{
+  ?{n.label.semantic_value}{
+    labelize :${n.label}, (+~{n.parsing_expression with prev: prev})
+  }{
+    +~{n.parsing_expression with prev: prev}
+  }
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::NodeTypeDecl}{
+  (add_semantic_types (+~{n.parsing_expression with prev: prev}), +{n.modules.semantic_values.join(', ')})
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::Nonterminal}{
+  _nt_${n.rule_name} ${prev}
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::Terminal}{
+  terminal ${prev}, ${n.quoted_string}
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::AnythingSymbol}{
+  anything ${prev}
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::CharacterClass}{
+  regexp ${prev}, '${n.regexp}'
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::Optional}{
+  optional ${prev}, (+~{n.parsing_expression with prev: prev})
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::ZeroOrMore}{
+  zero_or_more ${prev} do |${prev}_0| 
+    +~{n.parsing_expression with prev: '+{prev}_0'}
+  end
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::OneOrMore}{
+  one_or_more ${prev} do |${prev}_0| 
+    +~{n.parsing_expression with prev: '+{prev}_0'}
+  end
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::NotPredicate}{
+  negative_lookahead? ${prev}, (+~{n.parsing_expression with prev: prev})
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::AndPredicate}{
+  positive_lookahead? ${prev}, (+~{n.parsing_expression with prev: prev})
+}
++~{n}
