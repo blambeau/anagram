@@ -11,7 +11,6 @@ module Anagram
       
       # Input source
       attr_reader :source
-      alias :input :source
       
       # Interval in source
       attr_reader :interval

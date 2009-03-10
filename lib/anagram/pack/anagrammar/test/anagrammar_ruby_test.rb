@@ -25,7 +25,6 @@ module Anagram
             end
           }.tabto(0).strip
           r = rewrite(rule, :parsing_rule)
-          puts r
         end
         
         def test_choice
@@ -35,7 +34,6 @@ module Anagram
             end
           }.tabto(0).strip
           r = rewrite(rule, :parsing_rule)
-          puts r
         end
         
         def test_sequence
@@ -45,7 +43,6 @@ module Anagram
             end
           }.tabto(0).strip
           r = rewrite(rule, :parsing_rule)
-          puts r
         end
         
         def test_multi_level
@@ -55,7 +52,6 @@ module Anagram
             end
           }.tabto(0).strip
           r = rewrite(rule, :parsing_rule)
-          puts r
         end
         
       end

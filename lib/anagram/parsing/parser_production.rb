@@ -6,14 +6,14 @@ module Anagram
       module Production
         
         # Factors a result instance
-        def factor_result(input, start, stop, children=nil)
+        def factor_result(source, start, stop, children=nil)
           if children.nil?
-            node = Anagram::Ast::Leaf.new(input[start...stop])
+            node = Anagram::Ast::Leaf.new(source[start...stop])
           else
             node = Anagram::Ast::Branch.new
             node.children = children
           end
-          source_interval = Anagram::Ast::SourceInterval.new(input, start...stop)
+          source_interval = Anagram::Ast::SourceInterval.new(source, start...stop)
           node.source_interval = source_interval
           node
         end
@@ -34,7 +34,7 @@ module Anagram
     
         # Accumulates _rs_ results created in _r0_ state
         def accumulate(r0, labels, rs)
-          input = r0.input
+          source = r0.source
           start = r0.stop_index
           stop = rs.empty? ? start : rs[-1].stop_index
           if labels
@@ -42,7 +42,7 @@ module Anagram
               rs[i].key_in_parent = label if label
             end
           end
-          factor_result(input, start, stop, rs)
+          factor_result(source, start, stop, rs)
         end
     
       end # module Production

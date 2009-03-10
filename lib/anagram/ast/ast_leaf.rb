@@ -14,7 +14,6 @@ module Anagram
       # Attached semantic value
       attr_reader :semantic_value
 
-
       ### Construction API ####################################################
       
       # Creates a named lead node, with a given semantic value.      
@@ -35,11 +34,9 @@ module Anagram
       
       # Returns true
       def leaf?() true; end
-      alias :terminal? :leaf?
 
       # Returns false
       def branch?() false; end
-      alias :non_terminal? :branch?
       
       # Always returns false
       def has_child?(key) false; end
@@ -86,15 +83,6 @@ module Anagram
         end
         buffer
       end
-      
-      
-      ### Backward-compatibility API ##########################################
-      
-      # Mimics SyntaxNode.elements in Treetop v1.2.4 
-      #
-      # This method exists for backward compatibility with older versions of 
-      # Treetop. Use source_interval.source instead.
-      def elements() nil end
       
     end # class Leaf
     

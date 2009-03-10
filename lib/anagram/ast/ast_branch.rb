@@ -19,11 +19,9 @@ module Anagram
       
       # Returns false
       def leaf?() false; end
-      alias :terminal? :leaf?
 
       # Returns true
       def branch?() true; end
-      alias :non_terminal? :branch?
       
       # Returns self
       def semantic_value
@@ -175,15 +173,6 @@ module Anagram
         end
         buffer
       end
-      
-      
-      ### Backward-compatibility API ##########################################
-      
-      # Mimics SyntaxNode.elements in Anagram v1.2.4 
-      #
-      # This method exists for backward compatibility with older versions of 
-      # Treetop. Use source_interval.source instead.
-      def elements() @children end
       
     end # class Branch
     

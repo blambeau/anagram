@@ -11,13 +11,13 @@ module Anagram
         @terminal_parse_failures = nil
       end
     
-      # Parses a given input
-      def parse(input, rule=@root)
+      # Parses a given source
+      def parse(source, rule=@root)
         @memoization = {}
-        r0 = factor_result(input, 0, 0)
+        r0 = factor_result(source, 0, 0)
         r1 = self.send("_nt_#{rule}", r0)
-        raise ParseError, failure_reason(input) unless r1
-        raise ParseError, failure_reason(input) unless r1.stop_index==input.length
+        raise ParseError, failure_reason(source) unless r1
+        raise ParseError, failure_reason(source) unless r1.stop_index==source.length
         r1
       end
       
@@ -32,14 +32,14 @@ module Anagram
       end
       
       # Get a user-friendly failure reason
-      def failure_reason(input)
+      def failure_reason(source)
         reason, index = "Expected one of ", @terminal_parse_failures[0]
         @terminal_parse_failures.each_with_index do |fail,i|
           next if i==0
           reason << ', ' unless i==1
           reason << "'#{fail}'"
         end
-        reason << " at " << input.column_of(index) << "::" << input.line_of(index)
+        reason << " at " << source.column_of(index) << "::" << source.line_of(index)
       end
     
       # Checks in memorization
@@ -56,31 +56,31 @@ module Anagram
       
       # Factors an empty result
       def empty(r0)
-        input, stop_index = r0.input, r0.stop_index
-        return nil if stop_index+1 > input.length
-        factor_result(input, stop_index, stop_index)
+        source, stop_index = r0.source, r0.stop_index
+        return nil if stop_index+1 > source.length
+        factor_result(source, stop_index, stop_index)
       end
     
       # Parses any character
       def anything(r0)
-        input, stop_index = r0.input, r0.stop_index
-        return nil if stop_index+1 > input.length
-        factor_result(input, stop_index, stop_index+1)
+        source, stop_index = r0.source, r0.stop_index
+        return nil if stop_index+1 > source.length
+        factor_result(source, stop_index, stop_index+1)
       end
     
       # Parses the terminal _which_ in the state _r0_
       def terminal(r0, which)
-        input, stop_index = r0.input, r0.stop_index
-        return factor_result(input, stop_index, stop_index+which.length)\
-          if input.index(which, stop_index)==stop_index
+        source, stop_index = r0.source, r0.stop_index
+        return factor_result(source, stop_index, stop_index+which.length)\
+          if source.index(which, stop_index)==stop_index
         terminal_parse_failure(r0, which)
       end
   
       # Parses the regular expression _which_ in the state _r0_
       def regexp(r0, which)
-        input, stop_index = r0.input, r0.stop_index
-        return factor_result(input, stop_index, stop_index+$&.length) \
-          if input.index(@regexps[which],stop_index)==stop_index
+        source, stop_index = r0.source, r0.stop_index
+        return factor_result(source, stop_index, stop_index+$&.length) \
+          if source.index(@regexps[which],stop_index)==stop_index
         terminal_parse_failure(r0, which)
       end
     

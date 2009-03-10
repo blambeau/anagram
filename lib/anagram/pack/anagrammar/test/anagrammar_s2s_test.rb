@@ -145,7 +145,6 @@ module Anagram
         
         def test_optimization
           r = rewrite('rule test [a-z]+ end', :parsing_rule)
-          puts r.inspect
         end
         
       end # class Syntax2SemanticsTest

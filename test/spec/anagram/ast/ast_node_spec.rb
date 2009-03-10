@@ -14,9 +14,7 @@ module NodeSpec
     end
     it "reports itself as leaf and terminal" do
       node.should be_leaf
-      node.should be_terminal
       node.should_not be_branch
-      node.should_not be_non_terminal
     end
     it "has a text value based on the input and the interval" do
       node.text_value.should == "12 "
@@ -24,9 +22,6 @@ module NodeSpec
     it "has empty array of children and the same for child_keys" do
       node.children.should == []
       node.child_keys.should == []
-    end
-    it "has nil elements" do
-      node.elements.should be_nil
     end
     it "has no parent, no key" do
       node.parent.should be_nil
@@ -61,9 +56,7 @@ module NodeSpec
     end
     it "reports itself as branch and non_terminal" do
       node.should_not be_leaf
-      node.should_not be_terminal
       node.should be_branch
-      node.should be_non_terminal
     end
     it "has a text value based on the input and the interval" do
       node.text_value.should == "12 + 13 "
