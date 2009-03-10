@@ -141,7 +141,7 @@ module Anagram
       # Allows creating a rewriter inline instead of subclassing
       def self.new(&block)
         c = Class.new(Rewriter)
-        c.module_eval(&block) unless block.nil?
+        c.instance_eval(&block) unless block.nil?
         c
       end
       

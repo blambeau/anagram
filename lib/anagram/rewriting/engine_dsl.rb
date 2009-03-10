@@ -5,6 +5,15 @@ module Anagram
       # Provides Domain Specific Language of Anagram's rewriting engine.
       module DSL
         
+        # Puts the namespace when resolving matching modules
+        def namespace(mod)
+          s = (class << self; self; end)
+          s.instance_eval do @namespace = mod end
+          def s.const_missing(name)
+            @namespace.const_get(name)
+          end
+        end
+        
         # Returns the current in_mode config
         def plugin_config
           @configuration.get_inmode_config(@mode, true)

@@ -1,15 +1,21 @@
 require 'test/unit'
 require 'anagram'
 
-module Plus;    end
-module Times;   end
-module Paren;   end
-module Var;     end
-module Lit;     end
-  
 # Tests the Engine class
 class EngineTest < Test::Unit::TestCase
   include Anagram::Ast::Helper
+  
+  module Plus;    end
+  module Times;   end
+  module Paren;   end
+  module Var;     end
+  module Lit;     end
+  
+  module Namespace
+    module Enclosed; end
+  end
+  
+  include Namespace
   
   # Creates an ast for (x+y)*2 under @ast
   def setup
@@ -48,7 +54,7 @@ class EngineTest < Test::Unit::TestCase
   def test_it_respects_priorities
     r = Anagram::Rewriting::Engine.new do
       template Object, 0.2 do "Object:0.2" end
-      template Times,  1.0 do "Times:1.0"  end
+      template EngineTest::Times,  1.0 do "Times:1.0"  end
     end
     assert_equal("Times:1.0", r.execute(@ast))
     assert_equal("Object:0.2", r.execute(@two))
@@ -56,8 +62,8 @@ class EngineTest < Test::Unit::TestCase
   
     r = Anagram::Rewriting::Engine.new do
       template Object, 0.5 do |r,n| r.apply_all            end
-      template Times,  1.0 do "Times:1.0"                  end
-      template Lit         do |r,node| node.semantic_value end
+      template EngineTest::Times,  1.0 do "Times:1.0"                  end
+      template EngineTest::Lit         do |r,node| node.semantic_value end
     end
     assert_equal("Times:1.0", r.execute(@ast))
     assert_equal(nil, r.execute(@plus))
@@ -68,24 +74,24 @@ class EngineTest < Test::Unit::TestCase
   def test_it_respects_modes
     r = Anagram::Rewriting::Engine.new do
       mode :main do
-        template Times do |r,n| r.in_mode(:other) {r.apply(n)} end
+        template EngineTest::Times do |r,n| r.in_mode(:other) {r.apply(n)} end
       end
       
       mode :other do
-        template Times do |r,n| "Times" end
+        template EngineTest::Times do |r,n| "Times" end
       end
     end
     assert_equal("Times", r.execute(@ast))
   
     r = Anagram::Rewriting::Engine.new do
       mode :main do
-        template Times do |r,n| r.in_mode(:other) {r.apply(n)} end
+        template EngineTest::Times do |r,n| r.in_mode(:other) {r.apply(n)} end
       end
       mode :other do
-        template Times do |r,n| r.in_mode(:third) {r.apply(n)} end
+        template EngineTest::Times do |r,n| r.in_mode(:third) {r.apply(n)} end
       end
       mode :third do
-        template Times do |r,n| "Times" end
+        template EngineTest::Times do |r,n| "Times" end
       end
     end
     assert_equal("Times", r.execute(@ast))
@@ -95,6 +101,20 @@ class EngineTest < Test::Unit::TestCase
   def test_it_allows_simple_evaluation
     interpretation = {"x" => 5, "y" => 10}
     r = Anagram::Rewriting::Engine.new do
+      template EngineTest::Plus   do |r,n| r.apply(n.left)+r.apply(n.right)    end
+      template EngineTest::Times  do |r,n| r.apply(n.left)*r.apply(n.right)    end
+      template EngineTest::Paren  do |r,n| r.apply(0)                          end
+      template EngineTest::Var    do |r,n| interpretation[n.semantic_value]    end
+      template EngineTest::Lit    do |r,n| n.semantic_value                    end
+    end
+    result = r.execute(@ast)
+    assert_equal 30, result
+  end
+  
+  def test_it_allows_namespace
+    interpretation = {"x" => 5, "y" => 10}
+    r = Anagram::Rewriting::Engine.new do
+      namespace EngineTest
       template Plus   do |r,n| r.apply(n.left)+r.apply(n.right)    end
       template Times  do |r,n| r.apply(n.left)*r.apply(n.right)    end
       template Paren  do |r,n| r.apply(0)                          end
@@ -103,6 +123,13 @@ class EngineTest < Test::Unit::TestCase
     end
     result = r.execute(@ast)
     assert_equal 30, result
+  end
+  
+  def test_it_allows_complex_namespace
+    r = Anagram::Rewriting::Engine.new do
+      namespace EngineTest::Namespace
+      template Enclosed do "hello" end
+    end
   end
   
 end

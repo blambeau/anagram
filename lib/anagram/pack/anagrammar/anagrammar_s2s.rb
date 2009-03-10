@@ -3,6 +3,7 @@ module Anagram
     module Anagrammar
       class Syntax2Semantics < Anagram::Rewriting::Rewriter
         include Anagrammar::SyntaxTree
+        namespace Anagrammar::SyntaxTree
         mode :main do 
           template Object do |r,tree|
             tree = r.in_mode(:rewrite)  {r.apply(tree)}
