@@ -6,7 +6,7 @@ module Anagram
         configuration do
           mode :main do 
             template Object do |r,tree|
-              tree = r.in_mode(:rewrite) {r.apply(tree)}
+              tree = r.in_mode(:rewrite)  {r.apply(tree)}
               tree = r.in_mode(:optimize) {r.apply(tree)}
               tree
             end
@@ -34,6 +34,8 @@ module Anagram
                                               r.copy() do |copy| 
                                                 copy.parsing_expression = r.apply(:primary)
                                                 label = n.label.text_value.strip[0..-2]
+                                                label = copy.parsing_expression.rule_name.semantic_value if \
+                                                        (label.nil? or label.empty?) and Nonterminal===copy.parsing_expression
                                                 copy.label = label.empty? ? nil : label.to_sym
                                               end
                                             end

@@ -19,7 +19,7 @@
     class Parser < Anagram::Parsing::CompiledParser
       include ParserMethods
       def self.<<(input, rule=nil)
-        self.parse(input, rule)
+        self.new.parse(input, rule)
       end
     end
   end
@@ -32,7 +32,7 @@
     result=already_found?(r, :${n.rule_name})
     return result unless result.nil?
     result = (+~{n.parsing_expression with prev: 'r'})
-    (memoize r, :${n.rule_name}, result)
+    (memoize r, :${n.rule_name}, result) if result
   end
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::Choice}{
@@ -40,17 +40,13 @@
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::Sequence}{
   *{n using each_with_index as c, i}{${prev}_${i+1} = (+~{c with prev: '?{i==0}{+{prev}}{+{prev}_+{i}}'})}{ and!{"\n"}} and
-  (accumulate ${prev}, *{n using each_with_index as c, i}{${prev}_${i+1}}{, })
+  (accumulate ${prev}, [*{n as c}{${c.label.semantic_value.inspect}}{, }], [*{n using each_with_index as c, i}{${prev}_${i+1}}{, }])
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::Labeled}{
-  ?{n.label.semantic_value}{
-    labelize :${n.label}, (+~{n.parsing_expression with prev: prev})
-  }{
-    +~{n.parsing_expression with prev: prev}
-  }
+  +~{n.parsing_expression with prev: prev}
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::NodeTypeDecl}{
-  (add_semantic_types (+~{n.parsing_expression with prev: prev}), +{n.modules.semantic_values.join(', ')})
+  (add_semantic_types (+~{n.parsing_expression with prev: prev}), [+{n.modules.semantic_values.join(', ')}])
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::Nonterminal}{
   _nt_${n.rule_name} ${prev}

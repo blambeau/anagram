@@ -108,7 +108,7 @@ module Anagram
           
           r = rewrite("the_nt_rule", :labeled)
           assert Labeled===r
-          assert_equal nil, r.label.semantic_value
+          assert_equal :the_nt_rule, r.label.semantic_value
           assert Nonterminal===r.parsing_expression
           
           r = rewrite("label:the_nt_rule+", :labeled)

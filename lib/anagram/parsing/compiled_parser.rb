@@ -23,10 +23,12 @@ module Anagram
       
       # Adds a terminal parse failure
       def terminal_parse_failure(r0, terminal)
-        return if @terminal_parse_failures and @terminal_parse_failures[0]>r0.stop_index
-        @terminal_parse_failures = [r0.stop_index] if @terminal_parse_failures.nil? or
-                                                @terminal_parse_failures[0]<r0.stop_index
+        stop_index = r0.stop_index
+        return nil if @terminal_parse_failures and @terminal_parse_failures[0]>stop_index
+        @terminal_parse_failures = [stop_index] if @terminal_parse_failures.nil? or
+                                                @terminal_parse_failures[0]<stop_index
         @terminal_parse_failures << terminal
+        nil
       end
       
       # Get a user-friendly failure reason
@@ -42,62 +44,59 @@ module Anagram
     
       # Checks in memorization
       def already_found?(r, rule)
-        index = r.stop_index
         return nil unless @memoization[rule]
-        @memoization[rule][index]
+        @memoization[rule][r.stop_index]
       end
       
       # Memoizes a given result
       def memoize(r, rule, result)
-        index = r.stop_index
         @memoization[rule] = {} unless @memoization[rule]
-        @memoization[rule][index] = result
-        result
+        @memoization[rule][r.stop_index] = result
       end
       
       # Factors an empty result
       def empty(r0)
         input, stop_index = r0.input, r0.stop_index
         return nil if stop_index+1 > input.length
-        factor_result(r0.input, stop_index, stop_index)
+        factor_result(input, stop_index, stop_index)
       end
     
       # Parses any character
       def anything(r0)
         input, stop_index = r0.input, r0.stop_index
         return nil if stop_index+1 > input.length
-        factor_result(r0.input, stop_index, stop_index+1)
+        factor_result(input, stop_index, stop_index+1)
       end
     
       # Parses the terminal _which_ in the state _r0_
       def terminal(r0, which)
-        result = factor_result(r0.input, r0.stop_index, r0.stop_index+which.length) \
-          if r0.input[r0.stop_index,which.length]==which
-        terminal_parse_failure(r0, which) unless result
-        result
+        input, stop_index = r0.input, r0.stop_index
+        return factor_result(input, stop_index, stop_index+which.length)\
+          if input.index(which, stop_index)==stop_index
+        terminal_parse_failure(r0, which)
       end
   
       # Parses the regular expression _which_ in the state _r0_
       def regexp(r0, which)
-        result = factor_result(r0.input, r0.stop_index, r0.stop_index+$&.length) \
-          if r0.input.index(@regexps[which],r0.stop_index)==r0.stop_index
-        terminal_parse_failure(r0, which) unless result
-        result
+        input, stop_index = r0.input, r0.stop_index
+        return factor_result(input, stop_index, stop_index+$&.length) \
+          if input.index(@regexps[which],stop_index)==stop_index
+        terminal_parse_failure(r0, which)
       end
     
       # Checks an optional
       def optional(r0, result)
-        result.nil? ? empty(r0) : result
+        result ? result : empty(r0)
       end
     
       # Positive look ahead
       def positive_lookahead?(r0, result)
-        result.nil? ? nil : empty(r0)
+        result ? empty(r0) : nil
       end
     
       # Negative look ahead
       def negative_lookahead?(r0, result)
-        result.nil? ? empty(r0) : nil
+        result ? nil : empty(r0)
       end
     
       # ZeroOrMore macro (corresponding to '*')
@@ -106,7 +105,7 @@ module Anagram
         while r1 = yield(r1)
           acc << r1
         end
-        accumulate(r0, *acc)
+        accumulate(r0, nil, acc)
       end  
     
       # OneOrMore macro (corresponding to '+')
@@ -116,7 +115,7 @@ module Anagram
         while r1 = yield(r1)
           acc << r1
         end
-        accumulate(r0, *acc)
+        accumulate(r0, nil, acc)
       end
     
     end # class CompiledParser

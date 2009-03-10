@@ -97,12 +97,12 @@ module Anagram
       
       # Returns start offset in source
       def start_index 
-        @source_interval.start_index
+        @start_index ||= @source_interval.start_index
       end
 
       # Returns stop offset in source
       def stop_index 
-        @source_interval.stop_index
+        @stop_index ||= @source_interval.stop_index
       end
 
       # Returns the complete source text that led to this node creation.

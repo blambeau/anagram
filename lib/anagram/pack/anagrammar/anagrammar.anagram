@@ -1,3 +1,5 @@
+module Anagram
+module Pack
 grammar Anagrammar
  
 	### Master declarations #################################################
@@ -75,7 +77,7 @@ grammar Anagrammar
 	rule terminal
 	    '"' string:(!'"' ("\\\\" / '\"' / .))* '"'                 <Terminal>
 	  / "'" string:(!"'" ("\\\\" / "\\'" / .))* "'"                <Terminal>
-	 / '[' characters:(!']' ('\\' . /!'\\' .))+ ']'         <CharacterClass>
+	  / '[' characters:(!']' ('\\' . /!'\\' .))+ ']'         <CharacterClass>
 	  / '.'                                                  <AnythingSymbol>
 	end
 	rule nonterminal
@@ -130,13 +132,12 @@ grammar Anagrammar
 	  !space .
 	end
 	rule space
-	  (white / comment_to_eol)+
+	  ([ \t\n\r]+ / comment_to_eol)+
 	end
 	rule comment_to_eol
 	  '#' (!"\n" .)*
 	end
-	rule white
-	  [ \t\n\r]
-	end
 
-end  
+end
+end
+end

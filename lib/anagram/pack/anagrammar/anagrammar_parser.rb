@@ -2524,11 +2524,7 @@ module Anagram
         
         # Lauches the parsing
         def self.<<(arg, rule=nil)
-          t1 = Time.now
-          r = self.new.parse_or_fail(arg, rule)
-          t2 = Time.now
-          puts "Treetop parsed in #{t2-t1} ms."
-          Anagram::Ast[r]
+          Anagram::Ast[self.new.parse_or_fail(arg, rule)]
         end
       end
     end

@@ -20,20 +20,28 @@ module Anagram
     
         # Labelizes a given result
         def labelize(label, result)
-          result.key_in_parent = label unless result.nil?
+          return nil unless result
+          result.key_in_parent = label
           result
         end
       
         # Adds semantic types
-        def add_semantic_types(result, *types)
-          result.add_semantic_types(*types) unless result.nil?
+        def add_semantic_types(result, types)
+          return nil unless result
+          result.add_semantic_types(*types)
           result
         end
     
         # Accumulates _rs_ results created in _r0_ state
-        def accumulate(r0, *rs)
+        def accumulate(r0, labels, rs)
           input = r0.input
-          start, stop = r0.stop_index, rs.empty? ? r0.stop_index : rs[-1].stop_index
+          start = r0.stop_index
+          stop = rs.empty? ? start : rs[-1].stop_index
+          if labels
+            labels.each_with_index do |label, i|
+              rs[i].key_in_parent = label if label
+            end
+          end
           factor_result(input, start, stop, rs)
         end
     
