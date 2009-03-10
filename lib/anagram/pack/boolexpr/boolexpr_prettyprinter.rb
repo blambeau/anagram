@@ -7,17 +7,18 @@ module Anagram
       #
       class PrettyPrinter < Anagram::Rewriting::Rewriter
         include SemanticTree
+
         PRIORITIES = {Or => 1, And => 2, Not => 3, Proposition => 4, Literal => 5}
-        configuration do
-          template Or|And do |r,n| 
-            left, op, right = r.apply(:left), r.apply(:op), r.apply(:right)
-            right = "(#{right})" if PrettyPrinter.lower_priority?(n, n.right)
-            "#{left} #{Or===n ? 'or' : 'and'} #{right}"
-          end
-          template Not         do |r,n| "not(#{r.apply(:right)})" end
-          template Proposition do |r,n| r.semantic_value          end
-          template Literal     do |r,n| r.semantic_value          end
+        Dyadic = Anagram::Rewriting::OrMatcher.new(Or, And)
+
+        template Dyadic do |r,n| 
+          left, op, right = r.apply(:left), r.apply(:op), r.apply(:right)
+          right = "(#{right})" if PrettyPrinter.lower_priority?(n, n.right)
+          "#{left} #{Or===n ? 'or' : 'and'} #{right}"
         end
+        template Not         do |r,n| "not(#{r.apply(:right)})" end
+        template Proposition do |r,n| r.semantic_value          end
+        template Literal     do |r,n| r.semantic_value          end
     
         # Returns the priority of an Ast::Node
         def self.priority_of(who)

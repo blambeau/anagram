@@ -34,29 +34,29 @@ module EngineDSLSpec
       @intrusion = [Module.instance_method_or_nil(:|), Module.instance_method_or_nil(:&)]
     end
     
-    it "is not ruby intrusive" do
-      Anagram::Rewriting::Engine::DSL.new(engine.configuration) do
-        template Lit|Plus do |r,n| "found"     end 
-        template Lit&Plus do |r,n| "found"     end 
-      end
-      [Module.instance_method_or_nil(:|), Module.instance_method_or_nil(:&)].should == intrusion
-    end
-    
-    it "accepts or matchers" do
-      Anagram::Rewriting::Engine::DSL.new(engine.configuration) do
-        template Times    do |r,n| r.apply_all end
-        template Lit|Plus do |r,n| "found"     end 
-      end
-      engine.execute(ast).should == ["found", "found"]
-    end
-    
-    it "accepts and matchers" do
-      Anagram::Rewriting::Engine::DSL.new(engine.configuration) do
-        template Times    do |r,n| r.apply_all end
-        template Lit&Plus do |r,n| "found"     end 
-      end
-      engine.execute(ast).should be_nil
-    end
+    # it "is not ruby intrusive" do
+    #   Anagram::Rewriting::Engine::DSL.new(engine.configuration) do
+    #     template Lit|Plus do |r,n| "found"     end 
+    #     template Lit&Plus do |r,n| "found"     end 
+    #   end
+    #   [Module.instance_method_or_nil(:|), Module.instance_method_or_nil(:&)].should == intrusion
+    # end
+    # 
+    # it "accepts or matchers" do
+    #   Anagram::Rewriting::Engine::DSL.new(engine.configuration) do
+    #     template Times    do |r,n| r.apply_all end
+    #     template Lit|Plus do |r,n| "found"     end 
+    #   end
+    #   engine.execute(ast).should == ["found", "found"]
+    # end
+    # 
+    # it "accepts and matchers" do
+    #   Anagram::Rewriting::Engine::DSL.new(engine.configuration) do
+    #     template Times    do |r,n| r.apply_all end
+    #     template Lit&Plus do |r,n| "found"     end 
+    #   end
+    #   engine.execute(ast).should be_nil
+    # end
     
   end
   

@@ -20,11 +20,12 @@ module Anagram
       # Creates an empty rewriter.
       def initialize(configuration=nil, &block)
         configuration = Configuration.new unless configuration
-        unless block.nil?
-          dsl = Anagram::Rewriting::Engine::DSL.new(configuration)
-          dsl.execute_dsl(&block)
-        end
         @configuration = configuration
+        unless block.nil?
+          @mode = :main
+          extend(Engine::DSL)
+          self.instance_eval &block
+        end
         @state = nil
       end
 

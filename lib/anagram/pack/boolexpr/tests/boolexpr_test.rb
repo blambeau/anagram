@@ -36,14 +36,12 @@ module Anagram
           expr = "not(identified) or (died and unknown)"
           result = Boolexpr.semantic_tree(expr)
           rewriter = Anagram::Rewriting::Rewriter.new do
-            configuration do
-              type_rewrite SyntaxTree => SemanticTree
-              template SemanticTree::Or            do |r, node| r.apply(:left, :right).unshift(:or)  end
-              template SemanticTree::And           do |r, node| r.apply(:left, :right).unshift(:and) end
-              template SemanticTree::Not           do |r, node| [:not, r.apply(:right)]              end
-              template SemanticTree::Proposition   do |r, node| r.semantic_value                     end
-              template SemanticTree::Literal       do |r, node| r.semantic_value                     end
-            end
+            type_rewrite SyntaxTree => SemanticTree
+            template SemanticTree::Or            do |r, node| r.apply(:left, :right).unshift(:or)  end
+            template SemanticTree::And           do |r, node| r.apply(:left, :right).unshift(:and) end
+            template SemanticTree::Not           do |r, node| [:not, r.apply(:right)]              end
+            template SemanticTree::Proposition   do |r, node| r.semantic_value                     end
+            template SemanticTree::Literal       do |r, node| r.semantic_value                     end
           end
           result = rewriter << result
           expected = [:or, [:not, "identified"], [:and, "died", "unknown"]]

@@ -133,15 +133,9 @@ module Anagram
         
       end # module RewriterMethods
       
-      # Domain Specific Language extensions
-      module DSLExtensions
-        
-        # Installs type rewriting rules
-        def type_rewrite(hash)
-          config[Rewriter].type_rewrite = hash
-          hash.each_key {|from| extend(from)}
-        end
-      
+      # Installs type rewriting rules
+      def self.type_rewrite(hash)
+        plugin_config[Rewriter].type_rewrite = hash
       end
       
       # Allows creating a rewriter inline instead of subclassing
@@ -154,20 +148,15 @@ module Anagram
       # Installs an empty configuration on subclass
       def self.inherited(c)
         c.instance_eval do
-          @config = Anagram::Rewriting::Engine::Configuration.new
+          @configuration = Anagram::Rewriting::Engine::Configuration.new
+          @mode = :main
+          extend(Anagram::Rewriting::Engine::DSL)
         end
-      end
-      
-      # Lauches a configuration
-      def self.configuration(&block)
-        dsl = Anagram::Rewriting::Engine::DSL.new(@config)
-        dsl.extend(DSLExtensions)
-        dsl.execute_dsl(&block)
       end
       
       # Execution
       def self.<<(input)
-        engine = Anagram::Rewriting::Engine.new(@config)
+        engine = Anagram::Rewriting::Engine.new(@configuration)
         engine.extend(Anagram::Rewriting::Syntax2Semantics)
         engine.extend(RewriterMethods)
         engine.execute(input)
