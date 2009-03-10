@@ -15,7 +15,7 @@ task :all => [:test_all, :rdoc]
 desc "Lauches all tests"
 Rake::TestTask.new do |test|
   test.libs       << [ "lib", "test" ]
-  test.test_files = ['test/unit/test_all.rb', 'lib/anagram/pack/**/*_test.rb']
+  test.test_files = ['test/unit/test_all.rb']
   test.verbose    =  true
 end
 

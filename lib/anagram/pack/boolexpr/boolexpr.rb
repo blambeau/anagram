@@ -17,13 +17,13 @@ module Anagram
       
       # Converts a syntax tree to a semantic tree
       Syntax2Semantics =  Anagram::Rewriting::Rewriter.new do
-        type_rewrite SyntaxTree => SemanticTree
-        template SyntaxTree::Or            do |r, node| r.copy(:left, :right)     end
-        template SyntaxTree::And           do |r, node| r.copy(:left, :right)     end
-        template SyntaxTree::Not           do |r, node| r.copy(:right)            end
-        template SyntaxTree::Proposition   do |r, node| r.as_leaf(r.strip)        end
-        template SyntaxTree::Literal       do |r, node| r.as_leaf(r.strip)        end
-        template SyntaxTree::Parenthesized do |r, node| r.apply(:root)            end
+        type_rewrite Anagram::Pack::Boolexpr::SyntaxTree => Anagram::Pack::Boolexpr::SemanticTree
+        template Anagram::Pack::Boolexpr::SyntaxTree::Or            do |r, node| r.copy(:left, :right)     end
+        template Anagram::Pack::Boolexpr::SyntaxTree::And           do |r, node| r.copy(:left, :right)     end
+        template Anagram::Pack::Boolexpr::SyntaxTree::Not           do |r, node| r.copy(:right)            end
+        template Anagram::Pack::Boolexpr::SyntaxTree::Proposition   do |r, node| r.as_leaf(r.strip)        end
+        template Anagram::Pack::Boolexpr::SyntaxTree::Literal       do |r, node| r.as_leaf(r.strip)        end
+        template Anagram::Pack::Boolexpr::SyntaxTree::Parenthesized do |r, node| r.apply(:root)            end
       end
       
       # Rewriting rules
