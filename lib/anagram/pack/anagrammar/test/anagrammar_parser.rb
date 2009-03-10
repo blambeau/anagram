@@ -3,7 +3,7 @@ module Anagram
        module Anagrammar
          
          module ParserMethods
-           
+           include Anagram::Pack::Anagrammar::SyntaxTree
            def _nt_grammar_file(r)
          result=already_found?(r, :grammar_file)
          return result unless result.nil?

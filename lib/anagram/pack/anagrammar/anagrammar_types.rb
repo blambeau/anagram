@@ -24,13 +24,13 @@ module Anagram
         module AndPredicate; end
         module NotPredicate; end
         module Transient; end  
+        Prefix      = Anagram::Rewriting::OrMatcher[AndPredicate, NotPredicate, Transient]
+        Suffix      = Anagram::Rewriting::OrMatcher[Optional, OneOrMore, ZeroOrMore]
       end
       module SyntaxTree
         include CommonTypes
         module Primary; end
         module Parenthesized; end
-        Prefix      = Anagram::Rewriting::OrMatcher[AndPredicate, NotPredicate, Transient]
-        Suffix      = Anagram::Rewriting::OrMatcher[Optional, OneOrMore, ZeroOrMore]
         Atomic      = Anagram::Rewriting::OrMatcher[Terminal, Nonterminal, Parenthesized, CharacterClass, AnythingSymbol]
         Alternative = Anagram::Rewriting::OrMatcher[Sequence, Primary]
         NodeType    = Anagram::Rewriting::OrMatcher[ModuleType, InlineModule]

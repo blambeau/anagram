@@ -4,14 +4,7 @@ module Anagram
       class Syntax2Semantics < Anagram::Rewriting::Rewriter
         include Anagrammar::SyntaxTree
         namespace Anagrammar::SyntaxTree
-        mode :main do 
-          template Object do |r,tree|
-            tree = r.in_mode(:rewrite)  {r.apply(tree)}
-            tree = r.in_mode(:optimize) {r.apply(tree)}
-            tree
-          end
-        end
-        mode :rewrite do
+        mode :main do
           type_rewrite SyntaxTree => SemanticTree
           template SyntaxTree             do |r,n| r.copy_all                                               end
           template ModuleDecl             do |r,n| r.copy_all                                               end
@@ -69,18 +62,6 @@ module Anagram
           template Prefix                 do |r,n| r.rewrite_node_types()[0]                                 end
           template Suffix                 do |r,n| r.rewrite_node_types()[0]                                 end
           template Anagram::Ast::Node     do |r,n| r.leaf(r.strip)                                           end
-        end
-        
-        mode :optimize do
-          template Suffix do |r,n|
-            if CharacterClass===n.parsing_expression
-              suffix = OneOrMore===n ? '+' : ZeroOrMore===n ? '*' : '?'
-              r.branch(CharacterClass) << [:regexp, "#{n.parsing_expression.regexp.semantic_value}#{suffix}"]
-            else
-              r.copy_all
-            end
-          end
-          template Anagram::Ast::Node     do |r,n| r.copy_all;                                               end
         end
       end
     end

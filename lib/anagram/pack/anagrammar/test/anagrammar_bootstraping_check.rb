@@ -27,9 +27,6 @@ module Anagram
           end
           load File.join(File.dirname(__FILE__), 'anagrammar_parser.rb')
           @parser = Anagram::Pack::Anagrammar::Parser.new(:grammar_file)
-          Anagram::Pack::Anagrammar::ParserMethods.module_eval do
-            include Anagrammar::SyntaxTree
-          end
         end
         
         def test_parse_terminal()

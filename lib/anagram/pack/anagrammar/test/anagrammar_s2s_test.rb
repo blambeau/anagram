@@ -14,12 +14,7 @@ module Anagram
         # s2s rewriting
         def rewrite(input, rule)
           r1 = Anagrammar::Parser.<<(input, rule)
-          # puts "SyntaxTree ======================================"
-          # puts r1.inspect
           r2 = Anagrammar::Syntax2Semantics << r1
-          # puts
-          # puts "SemanticTree ======================================"
-          # puts r2.inspect
           r2
         end
         
