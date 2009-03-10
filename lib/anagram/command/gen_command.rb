@@ -78,7 +78,7 @@ module Anagram
         end
       end
       
-    end # class TreetopCommand
+    end # class ParserGenCommand
     
   end 
 end

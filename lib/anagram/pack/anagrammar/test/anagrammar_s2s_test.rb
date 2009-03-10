@@ -29,7 +29,7 @@ module Anagram
         
           r = rewrite('[a-z]', :terminal)
           assert CharacterClass===r
-          assert_equal '[a-z]', r.regexp.semantic_value
+          assert_equal "'[a-z]'", r.regexp.semantic_value
         
           r = rewrite('.', :terminal)
           assert AnythingSymbol===r
@@ -57,6 +57,26 @@ module Anagram
           r = rewrite("('a text portion')", :atomic)
           assert Terminal===r
           assert_equal "'a text portion'", r.quoted_string.semantic_value
+        end
+        
+        def test_module_type
+          r = rewrite(" <NodeType>", :module_type)
+          assert ModuleType===r
+          assert :NodeType == r.semantic_value
+        end
+        
+        def test_inline_module
+          r = rewrite("{ some ruby { code here } }", :inline_module)
+          assert InlineModule===r
+          assert "{ some ruby { code here } }"==r.semantic_value
+        end
+        
+        def test_node_type_declarations
+          # r = rewrite(" <NodeType> { some ruby { code here } }", :node_type_declarations)
+          # assert NodeTypeDecl===r
+          
+          r = rewrite(" <NodeType>", :node_type_declarations)
+          assert NodeTypeDecl===r
         end
         
         def test_primary

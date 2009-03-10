@@ -4,6 +4,7 @@ module Anagram
          
          module ParserMethods
            include Anagram::Pack::Anagrammar::SyntaxTree
+           def root() :grammar_file; end
            def _nt_grammar_file(r)
          result=already_found?(r, :grammar_file)
          return result unless result.nil?
@@ -350,7 +351,7 @@ module Anagram
          result=already_found?(r, :space)
          return result unless result.nil?
          result = (one_or_more r do |r_0| 
-                     (regexp r_0, '[ \t\n\r]+') or
+                     (regexp r_0, '[ \\t\\n\\r]+') or
                      (_nt_comment_to_eol r_0)
                    end)
          (memoize r, :space, result) if result

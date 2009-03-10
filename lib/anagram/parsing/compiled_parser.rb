@@ -4,20 +4,22 @@ module Anagram
       include Anagram::Parsing::CompiledParser::Production
     
       # Creates a parser instance
-      def initialize(root)
-        @root = root
+      def initialize()
         @regexps = Hash.new {|hash,key| hash[key] = Regexp.new(key)}
         @memoization = nil
         @terminal_parse_failures = nil
       end
     
       # Parses a given source
-      def parse(source, rule=@root)
+      def parse(source, rule=nil)
+        rule = root unless rule
+        raise ArgumentError, "Rule is nil and not root has been installed" unless rule
+        source.extend(Anagram::Utils::StringUtils)
         @memoization = {}
         r0 = factor_result(source, 0, 0)
         r1 = self.send("_nt_#{rule}", r0)
         raise ParseError, failure_reason(source) unless r1
-        raise ParseError, failure_reason(source) unless r1.stop_index==source.length
+        raise ParseError, failure_reason(source, r1) unless r1.stop_index==source.length
         r1
       end
       
@@ -32,14 +34,20 @@ module Anagram
       end
       
       # Get a user-friendly failure reason
-      def failure_reason(source)
+      def failure_reason(source, rend=nil)
+        return "Nothing parsed." unless @terminal_parse_failures
         reason, index = "Expected one of ", @terminal_parse_failures[0]
-        @terminal_parse_failures.each_with_index do |fail,i|
+        @terminal_parse_failures.uniq.each_with_index do |fail,i|
           next if i==0
           reason << ', ' unless i==1
           reason << "'#{fail}'"
         end
-        reason << " at " << source.column_of(index) << "::" << source.line_of(index)
+        reason << " at #{index}, " << source.column_of(index) << "::" << source.line_of(index)
+        if rend
+          reason << "\ntrailing source unparsed were\n'"
+          reason << source[rend.stop_index,-1].to_s
+          reason << "'"
+        end
       end
     
       # Checks in memorization
@@ -57,7 +65,6 @@ module Anagram
       # Factors an empty result
       def empty(r0)
         source, stop_index = r0.source, r0.stop_index
-        return nil if stop_index+1 > source.length
         factor_result(source, stop_index, stop_index)
       end
     

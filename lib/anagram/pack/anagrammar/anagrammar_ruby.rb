@@ -12,7 +12,9 @@ module Anagram
           template Suffix do |r,n|
             if CharacterClass===n.parsing_expression
               suffix = OneOrMore===n ? '+' : ZeroOrMore===n ? '*' : '?'
-              r.branch(CharacterClass) << [:regexp, "#{n.parsing_expression.regexp.semantic_value}#{suffix}"]
+              single_quoted = n.parsing_expression.regexp.semantic_value
+              single_quoted = "#{single_quoted[0..-2]}#{suffix}'"
+              r.branch(CharacterClass) << [:regexp, "#{single_quoted}"]
             else
               r.copy_all
             end

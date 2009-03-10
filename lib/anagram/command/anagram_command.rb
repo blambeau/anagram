@@ -7,7 +7,7 @@ module Anagram
     class AnagramCommand
       
       # Recognized commands
-      COMMANDS = {"tt" => "TreetopCommand", "gen" => "ParserGenCommand"}
+      COMMANDS = {"gen" => "ParserGenCommand"}
       
       # Builds the anagram command options
       def options
@@ -20,7 +20,6 @@ module Anagram
             # usage: #{opt.program_name} command [options]
             
             # The most commonly used anagram commands are
-            #   tt     Generates a treetop parser from a grammar
             #   gen    Generates an anagram parser from a grammar
             
             # See 'anagram help COMMAND' for more information on a specfic command.

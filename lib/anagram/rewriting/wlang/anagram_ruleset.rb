@@ -3,8 +3,9 @@ require 'wlang'
 
 module WLang
   class RuleSet
-    module Anagram
-      U=WLang::RuleSet::Utils
+    module AnagramRuleSet
+      U = WLang::RuleSet::Utils
+      SU = Object.new; SU.extend(Anagram::Utils::StringUtils) 
   
       # Default mapping between tag symbols and methods
       DEFAULT_RULESET = {'=~' => :definition, '$' => :semantic_value, '+~' => :match_inclusion}
@@ -14,7 +15,7 @@ module WLang
         expression, reached = parser.parse(offset, "wlang/ruby")
         value = parser.evaluate(expression)
         template, reached = parser.parse_block(reached, "wlang/dummy")
-        template = template.tabto(0).strip
+        template = SU.tabto(0, template).strip
         parser.context.evaluate("matching_rules") << [value, template]
         ["", reached]
       end
@@ -50,8 +51,8 @@ module WLang
     
           # instanciate
           instantiated = WLang::instantiate(template, context, "anagram").strip
-          indent = parser.buffer.column_of(parser.buffer.length-1)
-          instantiated = instantiated.tabto(indent).strip
+          indent = SU.column_of(parser.buffer.length-1, parser.buffer)
+          instantiated = SU.tabto(indent, instantiated).strip
           return [instantiated, reached]
         end
         
@@ -68,5 +69,5 @@ WLang::dialect("anagram") do
   rules WLang::RuleSet::Imperative
   rules WLang::RuleSet::Buffering
   rules WLang::RuleSet::Context
-  rules WLang::RuleSet::Anagram
+  rules WLang::RuleSet::AnagramRuleSet
 end

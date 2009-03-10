@@ -26,7 +26,7 @@ module Anagram
             remove_const :Parser
           end
           load File.join(File.dirname(__FILE__), 'anagrammar_parser.rb')
-          @parser = Anagram::Pack::Anagrammar::Parser.new(:grammar_file)
+          @parser = Anagram::Pack::Anagrammar::Parser.new
         end
         
         def test_parse_terminal()

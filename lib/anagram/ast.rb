@@ -126,7 +126,7 @@ module Anagram
   #
   # == Creating and manipulating ASTs
   #
-  # [Treetop::Runtime::CompiledParser] The simplest way to create ASTs is of course to 
+  # [Anagram::Parsing::CompiledParser] The simplest way to create ASTs is of course to 
   #                                    execute a parser, which will give you a syntax tree. 
   # [Helper] See also Anagram::Ast::Helper for a small DSL for creating semantic trees
   #          manually.
@@ -138,48 +138,7 @@ module Anagram
   #             powerful ways that exist. See Anagram::Rewriting for details about rewriting
   #             tools.
   #
-  module Ast
-
-    ### Backward-compatibility API ##########################################
-    
-    # Automatically converts a Treetop::Runtime::SyntaxNode into an Node,
-    # taking care of creating branch or leaf node for non-terminals/terminals
-    # respectively. This is the standard way to create ASTs from parsing results
-    # created by parsers generated using Treetop v1.2.x.
-    def self.[](parsed)
-      raise ArgumentError, "SyntaxNode expected, #{parsed.inspect} received"\
-        unless Treetop::Runtime::SyntaxNode===parsed 
-          
-      if parsed.terminal?
-        node = Leaf.new(parsed.text_value, *parsed.extension_modules)
-      else
-        node = Branch.new(*parsed.extension_modules)
-        
-        # find named nodes
-        found = {}
-        parsed.interesting_methods.each do |label|
-          next if /^_nt_/ =~ label.to_s
-          label = label.to_s.to_sym
-          child = parsed.send(label)
-          found[child] = label
-        end
-        
-        # add unnamed nodes
-        parsed.elements.each do |child|
-          if found.has_key?(child)
-            node << [found[child], Ast[child]]
-          else
-            node << Ast[child]
-          end
-        end
-      end
-      
-      # keep source interval and return
-      node.source_interval = SourceInterval.new(parsed.input, parsed.interval)          
-      node
-    end
-
-  end
+  module Ast; end
 end
 
 require "anagram/ast/source_interval"

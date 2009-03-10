@@ -52,7 +52,7 @@ module Anagram
           template Nonterminal            do |r,n| r.copy(:rule_name)                                        end
           template Terminal               do |r,n| r.copy() << [:quoted_string, r.text_value]                end
           template AnythingSymbol         do |r,n| r.branch(AnythingSymbol)                                  end
-          template CharacterClass         do |r,n| r.copy() << [:regexp, r.text_value]                       end
+          template CharacterClass         do |r,n| r.copy() << [:regexp, r.single_quote]                     end
           template NodeTypeDecl           do |r,n| r.copy() do |copy|
                                                      copy.modules = r.branch() << r.apply(r.descendant(NodeType))               
                                                    end

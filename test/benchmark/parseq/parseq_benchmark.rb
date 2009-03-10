@@ -2,30 +2,31 @@ dir = File.dirname(__FILE__)
 $LOAD_PATH << File.join(dir, '..', '..', 'lib')
 require 'anagram'
 require File.join(dir, 'parseq_treetop')
+require File.join(dir, 'parseq_treetop_bla')
 require File.join(dir, 'parseq_anagram')
-require File.join(dir, 'parseq_handmade')
 
 class SeqParBenchmark
   
   OPERATORS = ["par", "seq"]
   
-  PARSERS = [ByTreetop::ParSeqParser.new, 
-             ByAnagram::ParSeqParser.new,
-             ByHandmade::ParSeqParser.new(:statement),
-             ByHandmade::ParSeqParserNoRegexp.new(:statement)]
+  PARSERS = [ByTreetop::Parser, 
+             ByTreetopBla::Parser,
+             ByAnagram::Parser]
   
   # Checks the grammar
   def check()
     PARSERS.each do |parser|
+      parser = parser.new
+      puts "Checking parser #{parser}"
       begin 
-        parser.parse_or_fail("Task")
-        parser.parse_or_fail("seq Task end")
-        parser.parse_or_fail("par Task end")
-        parser.parse_or_fail("seq Task Task end")
-        parser.parse_or_fail("par Task Task end")
-        parser.parse_or_fail("par seq Task end Task end")
-        parser.parse_or_fail("par seq seq Task end end Task end")
-        parser.parse_or_fail("seq Task par seq Task end Task end Task end")
+        parser.parse("Task")
+        parser.parse("seq Task end")
+        parser.parse("par Task end")
+        parser.parse("seq Task Task end")
+        parser.parse("par Task Task end")
+        parser.parse("par seq Task end Task end")
+        parser.parse("par seq seq Task end end Task end")
+        parser.parse("seq Task par seq Task end Task end Task end")
       rescue => ex
         puts "Error using #{parser.class}"
         raise ex
@@ -57,7 +58,7 @@ class SeqParBenchmark
     number_by_size = Hash.new {|h,k| h[k] = 0}
     time_by_size   = Hash.new {|h,k| h[k] = PARSERS.collect{|p| 0}}
     
-    0.upto(250) do |i|
+    0.upto(400) do |i|
       input = generate
       length = input.length
       number_by_size[length] += 1
@@ -67,7 +68,7 @@ class SeqParBenchmark
       
       0.upto(PARSERS.size-1) do |p|
         t1 = Time.now
-        PARSERS[p].parse_or_fail(input)
+        PARSERS[p].new.parse(input)
         t2 = Time.now
         time_by_size[length][p] += (t2-t1)*1000
       end

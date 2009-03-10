@@ -123,7 +123,7 @@ module Anagram
       #
       # Friendly apply method. This method lauches templates executions on all
       # nodes denoted by _args_. These varying arguments may be node instances
-      # as well as selection patterns (see Treetop::Ast about selection of AST
+      # as well as selection patterns (see Anagram::Ast about selection of AST
       # nodes)
       #
       def apply(*args)

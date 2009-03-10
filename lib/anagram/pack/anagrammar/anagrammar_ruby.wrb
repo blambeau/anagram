@@ -13,6 +13,7 @@
     
     module ParserMethods
       *{n.include_list as i}{+~{i}}
+      def root() :${n.parsing_rule_list.children[0].rule_name}; end
       *{n.parsing_rule_list as r}{+~{r}}{!{"\n"}}
     end
     
@@ -58,7 +59,7 @@
   anything ${prev}
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::CharacterClass}{
-  regexp ${prev}, '${n.regexp}'
+  regexp ${prev}, ${n.regexp}
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::Optional}{
   optional ${prev}, (+~{n.parsing_expression with prev: prev})

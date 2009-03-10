@@ -17,33 +17,29 @@ module Anagram
         end
         
         def test_label_name
-          options = {:rule => :label_name}
-          assert_parse "label", options
-          assert_parse "label_with_underscore", options
-          assert_doesnt_parse "label with spaces", options
-          assert_doesnt_parse "CamelCaseLabel", options
+          assert_parse "label", :label_name
+          assert_parse "label_with_underscore", :label_name
+          assert_doesnt_parse "label with spaces", :label_name
+          assert_doesnt_parse "CamelCaseLabel", :label_name
         end
         
         def test_rule_name
-          options = {:rule => :rule_name}
-          assert_parse "rule", options
-          assert_parse "rule_with_underscore", options
-          assert_doesnt_parse "rule with spaces", options
-          assert_doesnt_parse "CamelCaseRule", options
+          assert_parse "rule", :rule_name
+          assert_parse "rule_with_underscore", :rule_name
+          assert_doesnt_parse "rule with spaces", :rule_name
+          assert_doesnt_parse "CamelCaseRule", :rule_name
         end
         
         def test_module_name
-          options = {:rule => :module_name}
-          assert_parse "Module", options
-          assert_parse "CamelCaseModule", options
+          assert_parse "Module", :module_name
+          assert_parse "CamelCaseModule", :module_name
         end
         
         def test_module_qualified_name
-          options = {:rule => :module_qualified_name}
-          assert_parse "Module", options
-          assert_parse "CamelCaseModule", options
-          assert_parse "Qualified::Module::Name", options
-          assert_doesnt_parse "Module With Spaces", options
+          assert_parse "Module", :module_qualified_name
+          assert_parse "CamelCaseModule", :module_qualified_name
+          assert_parse "Qualified::Module::Name", :module_qualified_name
+          assert_doesnt_parse "Module With Spaces", :module_qualified_name
         end
         
       end

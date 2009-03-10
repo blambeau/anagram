@@ -7,7 +7,7 @@ class CompiledParserTest < Test::Unit::TestCase
   # Installs an input text and a parser
   def setup
     @input = "This is a text to parse"
-    @parser = Anagram::Parsing::CompiledParser.new(nil)
+    @parser = Anagram::Parsing::CompiledParser.new
   end
   
   # Creates a result instance
@@ -23,7 +23,7 @@ class CompiledParserTest < Test::Unit::TestCase
     r = @parser.empty r(@input.length-1)
     assert_equal '', r.text_value
     r = @parser.empty r(@input.length)
-    assert_nil r
+    assert_equal '', r.text_value
   end
   
   def test_anything

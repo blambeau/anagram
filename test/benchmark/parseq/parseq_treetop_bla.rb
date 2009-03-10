@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), 'treetop_runtime')
-module ByTreetop
+module ByTreetopBla
   module ParserMethods
     include Treetop::Runtime
 
@@ -69,8 +69,8 @@ module ByTreetop
           i3, s3 = index, []
           s4, i4 = [], index
           loop do
-            if input.index(Regexp.new('[\\s]'), index) == index
-              r5 = (SyntaxNode).new(input, index...(index + 1))
+            if has_terminal?('[\\s]', true, index)
+              r5 = instantiate_node(SyntaxNode,input, index...(index + 1))
               @index += 1
             else
               r5 = nil
@@ -85,7 +85,7 @@ module ByTreetop
             self.index = i4
             r4 = nil
           else
-            r4 = SyntaxNode.new(input, i4...index, s4)
+            r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
           end
           s3 << r4
           if r4
@@ -93,7 +93,7 @@ module ByTreetop
             s3 << r6
           end
           if s3.last
-            r3 = (SyntaxNode).new(input, i3...index, s3)
+            r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
             r3.extend(StatementList0)
           else
             self.index = i3
@@ -105,11 +105,11 @@ module ByTreetop
             break
           end
         end
-        r2 = SyntaxNode.new(input, i2...index, s2)
+        r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
         s0 << r2
       end
       if s0.last
-        r0 = (SyntaxNode).new(input, i0...index, s0)
+        r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
         r0.extend(StatementList1)
       else
         self.index = i0
@@ -137,8 +137,8 @@ module ByTreetop
       end
 
       i0, s0 = index, []
-      if input.index('par', index) == index
-        r1 = (SyntaxNode).new(input, index...(index + 3))
+      if has_terminal?('par', false, index)
+        r1 = instantiate_node(SyntaxNode,input, index...(index + 3))
         @index += 3
       else
         terminal_parse_failure('par')
@@ -148,8 +148,8 @@ module ByTreetop
       if r1
         s2, i2 = [], index
         loop do
-          if input.index(Regexp.new('[\\s]'), index) == index
-            r3 = (SyntaxNode).new(input, index...(index + 1))
+          if has_terminal?('[\\s]', true, index)
+            r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
             @index += 1
           else
             r3 = nil
@@ -164,7 +164,7 @@ module ByTreetop
           self.index = i2
           r2 = nil
         else
-          r2 = SyntaxNode.new(input, i2...index, s2)
+          r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
         end
         s0 << r2
         if r2
@@ -173,8 +173,8 @@ module ByTreetop
           if r4
             s5, i5 = [], index
             loop do
-              if input.index(Regexp.new('[\\s]'), index) == index
-                r6 = (SyntaxNode).new(input, index...(index + 1))
+              if has_terminal?('[\\s]', true, index)
+                r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
                 @index += 1
               else
                 r6 = nil
@@ -189,12 +189,12 @@ module ByTreetop
               self.index = i5
               r5 = nil
             else
-              r5 = SyntaxNode.new(input, i5...index, s5)
+              r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
             end
             s0 << r5
             if r5
-              if input.index('end', index) == index
-                r7 = (SyntaxNode).new(input, index...(index + 3))
+              if has_terminal?('end', false, index)
+                r7 = instantiate_node(SyntaxNode,input, index...(index + 3))
                 @index += 3
               else
                 terminal_parse_failure('end')
@@ -206,7 +206,7 @@ module ByTreetop
         end
       end
       if s0.last
-        r0 = (SyntaxNode).new(input, i0...index, s0)
+        r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
         r0.extend(Par0)
       else
         self.index = i0
@@ -234,8 +234,8 @@ module ByTreetop
       end
 
       i0, s0 = index, []
-      if input.index('seq', index) == index
-        r1 = (SyntaxNode).new(input, index...(index + 3))
+      if has_terminal?('seq', false, index)
+        r1 = instantiate_node(SyntaxNode,input, index...(index + 3))
         @index += 3
       else
         terminal_parse_failure('seq')
@@ -245,8 +245,8 @@ module ByTreetop
       if r1
         s2, i2 = [], index
         loop do
-          if input.index(Regexp.new('[\\s]'), index) == index
-            r3 = (SyntaxNode).new(input, index...(index + 1))
+          if has_terminal?('[\\s]', true, index)
+            r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
             @index += 1
           else
             r3 = nil
@@ -261,7 +261,7 @@ module ByTreetop
           self.index = i2
           r2 = nil
         else
-          r2 = SyntaxNode.new(input, i2...index, s2)
+          r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
         end
         s0 << r2
         if r2
@@ -270,8 +270,8 @@ module ByTreetop
           if r4
             s5, i5 = [], index
             loop do
-              if input.index(Regexp.new('[\\s]'), index) == index
-                r6 = (SyntaxNode).new(input, index...(index + 1))
+              if has_terminal?('[\\s]', true, index)
+                r6 = instantiate_node(SyntaxNode,input, index...(index + 1))
                 @index += 1
               else
                 r6 = nil
@@ -286,12 +286,12 @@ module ByTreetop
               self.index = i5
               r5 = nil
             else
-              r5 = SyntaxNode.new(input, i5...index, s5)
+              r5 = instantiate_node(SyntaxNode,input, i5...index, s5)
             end
             s0 << r5
             if r5
-              if input.index('end', index) == index
-                r7 = (SyntaxNode).new(input, index...(index + 3))
+              if has_terminal?('end', false, index)
+                r7 = instantiate_node(SyntaxNode,input, index...(index + 3))
                 @index += 3
               else
                 terminal_parse_failure('end')
@@ -303,7 +303,7 @@ module ByTreetop
         end
       end
       if s0.last
-        r0 = (SyntaxNode).new(input, i0...index, s0)
+        r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
         r0.extend(Seq0)
       else
         self.index = i0
@@ -327,8 +327,8 @@ module ByTreetop
       end
 
       i0, s0 = index, []
-      if input.index(Regexp.new('[A-Z]'), index) == index
-        r1 = (SyntaxNode).new(input, index...(index + 1))
+      if has_terminal?('[A-Z]', true, index)
+        r1 = instantiate_node(SyntaxNode,input, index...(index + 1))
         @index += 1
       else
         r1 = nil
@@ -337,8 +337,8 @@ module ByTreetop
       if r1
         s2, i2 = [], index
         loop do
-          if input.index(Regexp.new('[A-Za-z0-9]'), index) == index
-            r3 = (SyntaxNode).new(input, index...(index + 1))
+          if has_terminal?('[A-Za-z0-9]', true, index)
+            r3 = instantiate_node(SyntaxNode,input, index...(index + 1))
             @index += 1
           else
             r3 = nil
@@ -349,11 +349,11 @@ module ByTreetop
             break
           end
         end
-        r2 = SyntaxNode.new(input, i2...index, s2)
+        r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
         s0 << r2
       end
       if s0.last
-        r0 = (SyntaxNode).new(input, i0...index, s0)
+        r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
         r0.extend(Task0)
       else
         self.index = i0

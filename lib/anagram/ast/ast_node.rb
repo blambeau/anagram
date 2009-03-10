@@ -63,9 +63,6 @@ module Anagram
           name = name.to_s[0..-2].to_sym
           self << [name, args[0]]
           self.select(name)
-        elsif :elements==name
-          #STDERR << "Warning, using Treetop deprecated API Ast::Node.elements"
-          children
         elsif args.empty?
           self.select(name)
         else
@@ -115,25 +112,16 @@ module Anagram
       end
 
       # Returns the complete source text that led to this node creation.
-      #
-      # This method exists for backward compatibility with older versions of 
-      # Treetop. Use source_interval.source instead.
       def source
         @source_interval.source
       end
       
       # Delegated to source_interval if any; returns "" otherwise. 
-      #
-      # This method exists for backward compatibility with older versions of 
-      # Treetop. Use source_interval.source instead.
       def text_value
         @source_interval.nil? ? "" : @source_interval.text_value
       end
       
       # Delegated to source_interval if any; returns nil otherwise.
-      #
-      # This method exists for backward compatibility with older versions of 
-      # Treetop. Use source_interval.source instead.
       def empty?
         @source_interval.nil? ? nil : @source_interval.empty?
       end

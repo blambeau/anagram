@@ -33,6 +33,12 @@ module Anagram
       def boolean()
         return 'true'==strip() ? true : false
       end
+      
+      # Puts the context_node's text value into Ruby valid
+      # single quotes
+      def single_quote()
+        "'#{strip.gsub(/\\/) { '\\\\' }.gsub(/'/) { "\\'"}}'"
+      end
   
     end
     
