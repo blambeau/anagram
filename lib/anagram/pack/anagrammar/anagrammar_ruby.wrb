@@ -14,7 +14,9 @@
     module ParserMethods
       *{n.include_list as i}{+~{i}}
       def root() :${n.parsing_rule_list.children[0].rule_name}; end
-      *{n.parsing_rule_list as r}{+~{r}}{!{"\n"}}
+      *{n.parsing_rule_list as r}{
+        +~{r}
+      }
     end
     
     class Parser < Anagram::Parsing::CompiledParser
@@ -26,21 +28,25 @@
   end
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::Include}{
-  include ${n.module_name}!{"\n"}
+  include ${n.module_name}
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::ParsingRule}{
   def _nt_${n.rule_name}(r)
     result=already_found?(r, :${n.rule_name})
-    return result unless result.nil?
+    return result if result
     result = (+~{n.parsing_expression with prev: 'r'})
     (memoize r, :${n.rule_name}, result) if result
   end
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::Choice}{
-  *{n as c}{(+~{c with prev: prev})}{ or!{"\n"}}
+  *{n as c}{
+    (+~{c with prev: prev}) or
+  } nil
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::Sequence}{
-  *{n using each_with_index as c, i}{${prev}_${i+1} = (+~{c with prev: '?{i==0}{+{prev}}{+{prev}_+{i}}'})}{ and!{"\n"}} and
+  *{n using each_with_index as c, i}{
+    ${prev}_${i+1} = (+~{c with prev: '?{i==0}{+{prev}}{+{prev}_+{i}}'}) and
+  }
   (accumulate ${prev}, [*{n as c}{${c.label.semantic_value.inspect}}{, }], [*{n using each_with_index as c, i}{${prev}_${i+1}}{, }])
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::Labeled}{
@@ -63,6 +69,9 @@
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::Optional}{
   optional ${prev}, (+~{n.parsing_expression with prev: prev})
+}
+=~{Anagram::Pack::Anagrammar::SemanticTree::Transient}{
+  +~{n.parsing_expression with prev: prev}
 }
 =~{Anagram::Pack::Anagrammar::SemanticTree::ZeroOrMore}{
   zero_or_more ${prev} do |${prev}_0| 

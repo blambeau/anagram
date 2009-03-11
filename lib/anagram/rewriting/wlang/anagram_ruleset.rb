@@ -15,7 +15,9 @@ module WLang
         expression, reached = parser.parse(offset, "wlang/ruby")
         value = parser.evaluate(expression)
         template, reached = parser.parse_block(reached, "wlang/dummy")
-        template = SU.tabto(0, template).strip
+        template = template.strip_block(template)
+        template = template.tabto(template, 0)
+        template = template[0..-2]
         parser.context.evaluate("matching_rules") << [value, template]
         ["", reached]
       end
@@ -50,9 +52,9 @@ module WLang
           context["matching_rules"] = rules
     
           # instanciate
-          instantiated = WLang::instantiate(template, context, "anagram").strip
-          indent = SU.column_of(parser.buffer.length-1, parser.buffer)
-          instantiated = SU.tabto(indent, instantiated).strip
+          instantiated = WLang::instantiate(template, context, "anagram")
+          #indent = SU.column_of(parser.buffer.length-1, parser.buffer)
+          #instantiated = SU.tabto(indent, instantiated).strip
           return [instantiated, reached]
         end
         
