@@ -14,8 +14,7 @@ module Anagram
   #   interpretation = {"x" => 5, "y" => 2}
   #
   #   # we create an Engine instance for evaluating the expression
-  #   engine = Anagram::Rewriting::Engine.new do
-  #     include Anagram::Rewriting::Syntax2Semantics
+  #   engine = Anagram::Rewriting::Rewriter.new do
   #     template Times         do |r,node| r.apply(node.left) * r.apply(node.right)  end
   #     template Plus          do |r,node| r.apply(node.left) + r.apply(node.right)  end
   #     template Minus         do |r,node| r.apply(node.left) - r.apply(node.right)  end
@@ -77,8 +76,7 @@ module Anagram
   # Parenthesized nodes, stripping spaces in variable names, converting literals as
   # integers embedded as semantic values of leaf nodes.
   #
-  #   engine = Anagram::Rewriting::Engine.new do
-  #     include Anagram::Rewriting::AstRewriting
+  #   engine = Anagram::Rewriting::Rewriter.new do
   #     template Times|Plus|Divide|Minus  do |r,node| r.copy_and_apply(:left, :op, :right) end
   #     template Variable                 do |r,node| r.as_leaf(r.strip)                   end
   #     template Operator                 do |r,node| r.as_leaf(r.symbol)                  end

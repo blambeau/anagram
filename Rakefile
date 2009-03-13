@@ -6,7 +6,7 @@ require "rubygems"
 
 dir     = File.dirname(__FILE__)
 lib     = File.join(dir, "lib", "anagram.rb")
-version = File.read(lib)[/^\s*VERSION\s*=\s*(['"])(\d\.\d\.\d)\1/, 2]
+version = File.read(lib)[/^\s*VERSION\s*=\s*(['"])(\d+\.\d+\.\d+)\1/, 2]
 
 task :default => [:all]
 task :all => [:test_all, :rdoc]
@@ -32,7 +32,7 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include("README", "LICENCE", "lib/")
   rdoc.main     = "README"
   rdoc.rdoc_dir = "doc/api"
-  rdoc.title    = "WLang Documentation"
+  rdoc.title    = "Anagram v.#{version}"
 end
 
 task :darkfish do
@@ -44,14 +44,18 @@ end
 gemspec = Gem::Specification.new do |s|
   s.name = 'anagram'
   s.version = version
-  s.summary = "Anagram, grammars, parsers and tools"
+  s.summary = "PEG grammars, parser generator, AST rewriting tools"
   s.platform = Gem::Platform::RUBY
-  s.description = %{Reusable grammars and parsers, parser generator and tools for manipulating them.}
-  s.files = Dir['lib/**/*'] + Dir['test/**/*'] + Dir['bin/*'] + Dir['vendor/**/*']
-  s.require_paths = ['lib', 'vendor/treetop']
+  s.description = %{Anagram aims investigating usefulness of quality Abstract Syntax Tree 
+    rewriting tools for achieving code generation-centric tasks. Anagram was
+    initially a fork of the Treetop project which has given  excellent foundations for PEG 
+    parsing in Ruby. Anagram tries to go one step further, also providing tools for manipulating
+    parsing results easily.}
+  s.files = Dir['lib/**/*'] + Dir['test/**/*'] + Dir['bin/*']
+  s.require_paths = ['lib']
   s.bindir  = 'bin'
   s.executables = ['anagram']
-  s.has_rdoc = false
+  s.has_rdoc = true
   s.extra_rdoc_files = Dir['[A-Z]*']
   s.author = "Bernard Lambeau"
   s.email = "blambeau@gmail.com"

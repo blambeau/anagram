@@ -1,6 +1,6 @@
 module Anagram
   
-  VERSION = "0.0.1".freeze
+  VERSION = "0.1.32".freeze
   
 end
 
