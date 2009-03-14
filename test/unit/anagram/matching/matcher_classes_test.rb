@@ -48,6 +48,24 @@ module Anagram
         assert_equal true,  or_matcher(Test::Unit::TestCase, not_matcher(Module))===self
         assert_equal false, or_matcher(String, Integer)===self
       end
+
+      # Tests the HasKeyMatcher class      
+      def test_has_key_matcher
+        o = Object.new
+        def o.key_in_parent() :the_key; end
+        assert_equal true, has_key_matcher(:the_key)===o
+        assert_equal false, has_key_matcher(:not_the_key)===o
+      end
+      
+      # Tests the HasChildMatcher
+      def test_has_child_matcher
+        o = Object.new
+        def o.key_in_parent() :the_key; end
+        arr1 = [12, 20, "hello", o]
+        assert_equal true, has_child_matcher(String)===arr1
+        assert_equal true, has_child_matcher(Integer)===arr1
+        assert_equal false, has_child_matcher(Module)===arr1
+      end
       
     end # class MatcherClassesTest
     

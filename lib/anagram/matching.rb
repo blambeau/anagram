@@ -28,6 +28,16 @@ module Anagram
       def not_matcher(matcher)
         NotMatcher.new(matcher)
       end
+      
+      # Factors a HasKeyMatcher instance
+      def has_key_matcher(key)
+        HasKeyMatcher.new(key)
+      end
+    
+      # Factors a HasChildMatcher instance
+      def has_child_matcher(matcher)
+        HasChildMatcher.new(matcher)
+      end
     
     end # module Factory
     extend(Factory)
@@ -35,7 +45,7 @@ module Anagram
     # Ruby extensions hash used by the DSLHelper to make
     # its job
     RUBY_EXTENSIONS = {
-      Module => [:"!", :&, :|, :[]]
+      Module => [:not, :&, :|, :[]]
     }
     
     # The DSLHelper instance used to handle extensions
@@ -67,3 +77,5 @@ require 'anagram/matching/type_matcher'
 require 'anagram/matching/or_matcher'
 require 'anagram/matching/and_matcher'
 require 'anagram/matching/not_matcher'
+require 'anagram/matching/has_key_matcher'
+require 'anagram/matching/has_child_matcher'

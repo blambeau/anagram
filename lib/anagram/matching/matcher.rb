@@ -4,6 +4,11 @@ module Anagram
     # Main class of all matchers
     class Matcher
       
+      # Builds an AndMatcher with self and child conditions
+      def [](*args)
+        self & HasChildMatcher.new(AndMatcher.new(args))
+      end
+      
       # Builds a OrMatcher with self
       def |(matcher)
         OrMatcher.new([self,matcher])
@@ -22,6 +27,8 @@ module Anagram
         case matcher
           when Matcher
             matcher
+          when Symbol
+            HasKeyMatcher.new(matcher)
           when Module
             TypeMatcher.new(matcher)
           else

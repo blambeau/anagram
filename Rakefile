@@ -34,6 +34,9 @@ Rake::RDocTask.new do |rdoc|
   rdoc.main     = "README"
   rdoc.rdoc_dir = "doc/api"
   rdoc.title    = "Anagram v.#{version}"
+  rdoc.options  << "-x" << "_types.rb" <<
+                   "-x" << "_test.rb" <<
+                   "-x" << ".wrb"
 end
 
 ##################################################################### Gem
