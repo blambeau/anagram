@@ -9,7 +9,7 @@ module Anagram
         include SemanticTree
 
         PRIORITIES = {Or => 1, And => 2, Not => 3, Proposition => 4, Literal => 5}
-        Dyadic = Anagram::Rewriting::OrMatcher.new(Or, And)
+        Dyadic = Anagram::Matching::OrMatcher.new([Or, And])
 
         template Dyadic do |r,n| 
           left, op, right = r.apply(:left), r.apply(:op), r.apply(:right)

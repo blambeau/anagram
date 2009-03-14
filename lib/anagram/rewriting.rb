@@ -104,7 +104,6 @@ module Anagram
 
 end
 
-require "anagram/rewriting/matchers"
 require "anagram/rewriting/engine_methods"
 require "anagram/rewriting/engine_state"
 require "anagram/rewriting/engine_template"

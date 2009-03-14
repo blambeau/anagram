@@ -24,15 +24,15 @@ module Anagram
         module AndPredicate; end
         module NotPredicate; end
         module Transient; end  
-        Prefix = Anagram::Rewriting::OrMatcher[AndPredicate, NotPredicate, Transient]
-        Suffix = Anagram::Rewriting::OrMatcher[Optional, OneOrMore, ZeroOrMore]
+        Prefix = Anagram::Matching::OrMatcher.new([AndPredicate, NotPredicate, Transient])
+        Suffix = Anagram::Matching::OrMatcher.new([Optional, OneOrMore, ZeroOrMore])
       end
       module SyntaxTree
         include CommonTypes
         module Primary; end
         module Parenthesized; end
-        Alternative = Anagram::Rewriting::OrMatcher[Sequence, Primary]
-        NodeType    = Anagram::Rewriting::OrMatcher[ModuleType, InlineModule]
+        Alternative = Anagram::Matching::OrMatcher.new([Sequence, Primary])
+        NodeType    = Anagram::Matching::OrMatcher.new([ModuleType, InlineModule])
       end
       module SemanticTree
         include CommonTypes
