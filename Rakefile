@@ -14,13 +14,14 @@ task :all => [:test_all, :rdoc]
 ##################################################################### Tests
 desc "Lauches all tests"
 Rake::TestTask.new do |test|
-  test.libs       << [ "lib", "test" ]
+  test.libs       << ["lib", "test", "vendor"]
   test.test_files = ['test/unit/test_all.rb']
   test.verbose    =  true
 end
 
 desc "Runs the rspec tests."
 Spec::Rake::SpecTask.new do |t|
+  t.libs    << ["lib", "vendor"]
   t.pattern = 'test/spec/anagram/spec_suite.rb'
 end
 
@@ -35,11 +36,6 @@ Rake::RDocTask.new do |rdoc|
   rdoc.title    = "Anagram v.#{version}"
 end
 
-task :darkfish do
-  `rm -rf doc/api`
-  `rdoc -o doc/api --title 'Anagram' -x vendor -x test -x doc -x bin -x Rakefile`
-end
-
 ##################################################################### Gem
 gemspec = Gem::Specification.new do |s|
   s.name = 'anagram'
@@ -51,8 +47,8 @@ gemspec = Gem::Specification.new do |s|
     initially a fork of the Treetop project which has given  excellent foundations for PEG 
     parsing in Ruby. Anagram tries to go one step further, also providing tools for manipulating
     parsing results easily.}
-  s.files = Dir['lib/**/*'] + Dir['test/**/*'] + Dir['bin/*']
-  s.require_paths = ['lib']
+  s.files = Dir['lib/**/*'] + Dir['test/**/*'] + Dir['bin/*'] + Dir['vendor/**/*']
+  s.require_paths = ['lib', 'vendor']
   s.bindir  = 'bin'
   s.executables = ['anagram']
   s.has_rdoc = true
