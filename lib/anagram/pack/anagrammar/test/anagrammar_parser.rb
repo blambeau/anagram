@@ -147,9 +147,9 @@ module Anagram
                                                   
                                                   (accumulate r_1_0, [:space, :labeled], [r_1_0_1, r_1_0_2])
                                                 end) and
-                                         r_3 = (_nt_node_type_declarations r_2) and
+                                         r_3 = (optional r_2, (_nt_type_decl r_2)) and
                                          
-                                         (accumulate r, [:head, :tail, :node_type_declarations], [r_1, r_2, r_3])), [Sequence]))
+                                         (accumulate r, [:head, :tail, :type_decl], [r_1, r_2, r_3])), [Sequence]))
           (memoize r, :sequence, result) if result
         end
         def _nt_labeled(r)
@@ -190,13 +190,13 @@ module Anagram
                                           (accumulate r, [:prefix, :atomic], [r_1, r_2])), [Primary])) or
                     ((add_semantic_types (r_1 = (_nt_atomic r) and
                                           r_2 = (_nt_suffix r_1) and
-                                          r_3 = (_nt_node_type_declarations r_2) and
+                                          r_3 = (optional r_2, (_nt_type_decl r_2)) and
                                           
-                                          (accumulate r, [:atomic, :suffix, :node_type_declarations], [r_1, r_2, r_3])), [Primary])) or
+                                          (accumulate r, [:atomic, :suffix, :type_decl], [r_1, r_2, r_3])), [Primary])) or
                     ((add_semantic_types (r_1 = (_nt_atomic r) and
-                                          r_2 = (_nt_node_type_declarations r_1) and
+                                          r_2 = (optional r_1, (_nt_type_decl r_1)) and
                                           
-                                          (accumulate r, [:atomic, :node_type_declarations], [r_1, r_2])), [Primary])) or
+                                          (accumulate r, [:atomic, :type_decl], [r_1, r_2])), [Primary])) or
                      nil)
           (memoize r, :primary, result) if result
         end
@@ -293,17 +293,24 @@ module Anagram
                      nil)
           (memoize r, :prefix, result) if result
         end
-        def _nt_node_type_declarations(r)
-          result=already_found?(r, :node_type_declarations)
+        def _nt_type_decl(r)
+          result=already_found?(r, :type_decl)
           return result if result
-          result = ((add_semantic_types (r_1 = (optional r, (_nt_module_type r)) and
-                                         r_2 = (optional r_1, (r_1_1 = (_nt_space r_1) and
-                                                               r_1_2 = (_nt_inline_module r_1_1) and
-                                                               
-                                                               (accumulate r_1, [:space, :inline_module], [r_1_1, r_1_2]))) and
-                                         
-                                         (accumulate r, [nil, nil], [r_1, r_2])), [NodeTypeDecl]))
-          (memoize r, :node_type_declarations, result) if result
+          result = (((add_semantic_types (r_1 = (_nt_module_type r) and
+                                          r_2 = (_nt_space r_1) and
+                                          r_3 = (_nt_inline_module r_2) and
+                                          
+                                          (accumulate r, [:module_type, :space, :inline_module], [r_1, r_2, r_3])), [NodeTypeDecl])) or
+                    ((add_semantic_types (r_1 = (_nt_module_type r) and
+                                          r_2 = (terminal r_1, '') and
+                                          
+                                          (accumulate r, [:module_type, nil], [r_1, r_2])), [NodeTypeDecl])) or
+                    ((add_semantic_types (r_1 = (_nt_space r) and
+                                          r_2 = (_nt_inline_module r_1) and
+                                          
+                                          (accumulate r, [:space, :inline_module], [r_1, r_2])), [NodeTypeDecl])) or
+                     nil)
+          (memoize r, :type_decl, result) if result
         end
         def _nt_module_type(r)
           result=already_found?(r, :module_type)

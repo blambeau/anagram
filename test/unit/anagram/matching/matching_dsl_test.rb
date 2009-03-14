@@ -65,6 +65,7 @@ module Anagram
         assert_equal true, Anagram::Ast::Node[:left]===@plus
         assert_equal false, Anagram::Ast::Node[:left]===@two
         assert_equal false, Anagram::Ast::Node[:left]===@paren
+        assert_equal true, Times[Paren, Lit]===@ast
       end
       
     end # class MatcherClassesTest

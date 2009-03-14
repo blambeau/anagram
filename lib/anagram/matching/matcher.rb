@@ -6,7 +6,8 @@ module Anagram
       
       # Builds an AndMatcher with self and child conditions
       def [](*args)
-        self & HasChildMatcher.new(AndMatcher.new(args))
+        children = args.collect {|arg| HasChildMatcher.new(arg)}
+        AndMatcher.new([self] + children)
       end
       
       # Builds a OrMatcher with self
@@ -18,30 +19,6 @@ module Anagram
       def &(matcher)
         AndMatcher.new([self,matcher])
       end  
-      
-      ### Utilities for subclasses #######################################
-      protected
-      
-      # Ensures that the given argument can be seen as a matcher
-      def ensure_matcher(matcher)
-        case matcher
-          when Matcher
-            matcher
-          when Symbol
-            HasKeyMatcher.new(matcher)
-          when Module
-            TypeMatcher.new(matcher)
-          else
-            raise ArgumentError, "Matcher expected, #{matcher} received." unless Matcher===matcher
-        end
-      end
-      
-      # Ensures that the given matchers (an array of) can all be seen as 
-      # matcher instances.
-      def ensure_matchers(matchers)
-        raise ArgumentError unless Array===matchers
-        matchers.collect {|m| ensure_matcher(m)}
-      end
       
     end # class Matcher
     

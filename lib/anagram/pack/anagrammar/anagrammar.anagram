@@ -51,7 +51,7 @@ module Anagram
       ### Sequence and sequenced ##############################################
       rule sequence
         head:labeled tail:(space labeled)+
-        node_type_declarations                                       <Sequence>
+        type_decl:type_decl?                            <Sequence>
       end
       rule labeled
         label:(label_name ':' / '')? primary:sequence_primary         <Labeled>
@@ -65,8 +65,8 @@ module Anagram
       ### Primary #############################################################
       rule primary
           prefix atomic                                               <Primary>
-        / atomic suffix node_type_declarations                        <Primary>
-        / atomic        node_type_declarations                        <Primary>
+        / atomic suffix type_decl:type_decl?             <Primary>
+        / atomic        type_decl:type_decl?             <Primary>
       end
 
       ### Atomic ##############################################################
@@ -98,8 +98,10 @@ module Anagram
       end
 
       ### Node class expression ###############################################
-      rule node_type_declarations
-        module_type? (space inline_module)?                      <NodeTypeDecl>
+      rule type_decl
+          module_type space inline_module                        <NodeTypeDecl>
+        / module_type ''                                         <NodeTypeDecl>
+        / space inline_module                                    <NodeTypeDecl>
       end
       rule module_type
         space '<' name:(!'>' .)+ '>'                               <ModuleType>

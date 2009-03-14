@@ -23,13 +23,14 @@ module Anagram
         def mode(mode, &block)
           raise ArgumentError, "Block expected for mode" unless block_given?
           old_mode, @mode = @mode, mode
-          yield
+          Anagram::Matching.install_dsl &block
           @mode = old_mode
         end
         
         # Adds a template using the given block
-        def template(match, priority = 1.0, &block)
-          plugin_config.add_template(Template.new(match, @mode, priority, &block))
+        def template(matcher, priority = 1.0, &block)
+          matcher = Anagram::Matching.ensure_matcher(matcher)
+          plugin_config.add_template(Template.new(matcher, @mode, priority, &block))
         end
       
       end # class DSL

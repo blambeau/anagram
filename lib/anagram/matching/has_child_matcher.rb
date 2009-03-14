@@ -7,7 +7,7 @@ module Anagram
       
       # Create a has-child matcher on specific submatcher
       def initialize(submatcher)
-        @submatcher = ensure_matcher(submatcher)
+        @submatcher = Matching.ensure_matcher(submatcher)
       end
       
       # Matching operator

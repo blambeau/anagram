@@ -1,19 +1,19 @@
-dir = File.dirname(__FILE__)
-require 'test/unit'
-require File.join(dir, '..', 'anagrammar')
+require File.join(File.dirname(__FILE__), '..', 'anagrammar')
 
 module Anagram
   module Pack
     module Anagrammar
       
-      # Tests SyntaxTree => SemanticTree conversion
-      class Syntax2SemanticsTest < Test::Unit::TestCase
+      # Provides test methods for boostraping or testing the current
+      # meta-parser.
+      module CompileTestMethods
         include Anagrammar::SemanticTree
-        
+
         # Rewrites a given input, parsing it with a rule and applying
         # s2s rewriting
         def rewrite(input, rule)
-          r1 = Anagrammar::Parser.<<(input, rule)
+          r1 = @parser.<<(input, rule)
+          puts r1.inspect if $debug
           r2 = Anagrammar::Syntax2Semantics << r1
           r2
         end
@@ -72,10 +72,10 @@ module Anagram
         end
         
         def test_node_type_declarations
-          # r = rewrite(" <NodeType> { some ruby { code here } }", :node_type_declarations)
-          # assert NodeTypeDecl===r
+          r = rewrite(" <NodeType> { some ruby { code here } }", :type_decl)
+          assert NodeTypeDecl===r
           
-          r = rewrite(" <NodeType>", :node_type_declarations)
+          r = rewrite(" <NodeType>", :type_decl)
           assert NodeTypeDecl===r
         end
         
@@ -162,7 +162,7 @@ module Anagram
           r = rewrite('rule test [a-z]+ end', :parsing_rule)
         end
         
-      end # class Syntax2SemanticsTest
+      end # module BootstrapingTestMethods
       
     end
   end

@@ -6,7 +6,7 @@ module Anagram
       
       # Create a or matcher on specific submatchers
       def initialize(matchers)
-        @matchers = ensure_matchers(matchers)
+        @matchers = Matching.ensure_matchers(matchers)
       end
       
       # Matching operator

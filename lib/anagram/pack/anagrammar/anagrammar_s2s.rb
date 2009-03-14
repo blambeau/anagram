@@ -14,15 +14,16 @@ module Anagram
           template ParsingRuleList        do |r,n| r.branch() << r.apply(r.descendant(ParsingRule))         end
           template ParsingRule            do |r,n| r.copy(:rule_name, :parsing_expression)                  end
           template Choice                 do |r,n| r.copy()  << r.apply(r.descendant(Alternative))          end
-          template Sequence               do |r,n|
-                                            unless n.node_type_declarations.text_value == ''
-                                              copy = r.apply(:node_type_declarations)
+          template Sequence[:type_decl]   do |r,n|
+                                            if n.type_decl and n.type_decl.semantic_value != ''
+                                              copy = r.apply(:type_decl)
                                               copy.parsing_expression = (r.copy() << r.apply(r.descendant(Labeled)))
                                               copy
                                             else
                                               r.copy() << r.apply(r.descendant(Labeled))
                                             end
                                           end
+          template Sequence               do |r,n| r.copy() << r.apply(r.descendant(Labeled))               end
           template Labeled                do |r,n| 
                                             r.copy() do |copy| 
                                               copy.parsing_expression = r.apply(:primary)
@@ -32,16 +33,21 @@ module Anagram
                                               copy.label = label.empty? ? nil : label.to_sym
                                             end
                                           end
+          template Primary[:prefix]       do |r,n|                                   
+                                            r.branch(r.apply(:prefix)) do |b|
+                                              b.parsing_expression = r.apply(:atomic)
+                                            end
+                                          end
           template Primary                do |r,n|
-                                            copy = if n.prefix or n.suffix
-                                              r.branch(*r.apply(:prefix, :suffix)) do |b|
+                                            copy = if n.suffix
+                                              r.branch(r.apply(:suffix)) do |b|
                                                 b.parsing_expression = r.apply(:atomic)
                                               end
                                             else
                                               r.apply(:atomic)
                                             end
-                                            if n.node_type_declarations and n.node_type_declarations.text_value != ''
-                                              ntd = r.apply(:node_type_declarations)
+                                            if n.type_decl and n.type_decl.text_value != ''
+                                              ntd = r.apply(:type_decl)
                                               ntd.parsing_expression = copy
                                               ntd
                                             else
