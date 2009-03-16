@@ -41,7 +41,7 @@ module Anagram
         / boolexpr_parenthesized                          <Parenthesized>
       end
       rule boolexpr_proposition
-          !keyword identifier:[a-z]+ boolexpr_spaces_or_eof
+          !keyword identifier:[a-z_]+ boolexpr_spaces_or_eof
         / ["] identifier:([\\] ["] / !["] .)+ ["] boolexpr_spaces_or_eof
       end
       rule boolexpr_literal
@@ -85,11 +85,11 @@ module Anagram
       end
       rule boolexpr_spaces
         # at least one space or a parenthesis
-        [\s]+ / &'('
+        [\s]+ / ![a-zA-Z0-9_]
       end
       rule boolexpr_spaces_or_eof
         # at least one space, a parenthesis, or EOF
-        [\s]+ / &'(' / ![.]
+        [\s]+ / ![a-zA-Z0-9_] / !.
       end
 
       ### Intended to be overriden ######################################

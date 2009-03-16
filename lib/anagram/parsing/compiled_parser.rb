@@ -42,10 +42,10 @@ module Anagram
           reason << ', ' unless i==1
           reason << "'#{fail}'"
         end
-        reason << " at #{index}, " << source.column_of(index) << "::" << source.line_of(index)
+        reason << " at #{index}, " << source.line_of(index).to_s << "::" << source.column_of(index).to_s
         if rend
-          reason << "\ntrailing source unparsed were\n'"
-          reason << source[rend.stop_index,-1].to_s
+          reason << "\ntrailing source were\n'"
+          reason << source[rend.stop_index..-1].to_s
           reason << "'"
         end
       end
@@ -71,8 +71,11 @@ module Anagram
       # Parses any character
       def anything(r0)
         source, stop_index = r0.source, r0.stop_index
-        return nil if stop_index+1 > source.length
-        factor_result(source, stop_index, stop_index+1)
+        unless stop_index+1 > source.length
+          factor_result(source, stop_index, stop_index+1)
+        else
+          terminal_parse_failure(r0, '.')
+        end
       end
     
       # Parses the terminal _which_ in the state _r0_

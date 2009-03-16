@@ -19,6 +19,34 @@ module Anagram
           @parser = Boolexpr::Parser.new
         end
         
+        # Tests proposition
+        def test_proposition
+          assert_parse 'prop', :boolexpr_proposition
+        end
+        
+        def test_openpar_sym
+          assert_parse '(', :openpar_sym
+        end
+        
+        def test_closepar_sym
+          assert_parse ')', :closepar_sym
+        end
+        
+        def test_boolexpr_spaces
+          assert_parse '    ', :boolexpr_spaces
+          assert_parse '', :boolexpr_spaces
+        end
+        
+        def test_boolexpr_spaces_or_eof
+          assert_parse '    ', :boolexpr_spaces_or_eof
+          assert_parse '', :boolexpr_spaces_or_eof
+        end
+        
+        # Tests on parenthesized bug
+        def test_parenthesized_bug
+          assert_parse '(prop)', :boolexpr_parenthesized
+        end
+        
         # Tests the parser on different expressions, veryfing that the  is
         # as expected.
         def test_boolexpr
@@ -45,7 +73,7 @@ module Anagram
             assert r.is_a?(expected), "Parsing #{src} leads to a #{expected}"
           end
         end
-
+        
         # Tests the parser on different expressions, veryfing that the  is
         # as expected.
         def test_spacing_pathologic
@@ -64,14 +92,14 @@ module Anagram
             assert r.is_a?(expected), "Parsing #{src} leads to a #{expected}"
           end
         end
-
+        
         # Checks that invalid expressions lead to a ParseError.
         def test_raises_on_real_pathologic_cases
           tests = ["(x", "(true", "true and", "(true or false) x", "not", "and", "or",
                    "x ande true", "ande and x", "ande", "ore", "truee", "falsee", "note"]
           tests.each do |src| assert_doesnt_parse(src) end
         end
-
+        
         def test_accepts_quoted_identifiers
           tests = [
             ['"x"', Proposition],

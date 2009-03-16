@@ -11,9 +11,9 @@ class CompiledParserTest < Test::Unit::TestCase
   end
   
   # Creates a result instance
-  def r(index)
+  def r(index, input=@input)
     b = Anagram::Ast::Branch.new
-    b.source_interval = Anagram::Ast::SourceInterval.new(@input, index...index)
+    b.source_interval = Anagram::Ast::SourceInterval.new(input, index...index)
     b
   end
   
@@ -146,6 +146,18 @@ class CompiledParserTest < Test::Unit::TestCase
       @parser.regexp r00, '[a-z]'
     end
     assert_equal 'parse', r3.text_value
+  end
+  
+  def test_on_positive_lookahead_bug
+    text = '('
+    r0 = r(0, text)
+    r1 = (@parser.positive_lookahead? r0, (@parser.terminal r0, '('))
+    assert_not_nil r1
+    assert_equal 0, r1.start_index
+    
+    r1 = (@parser.negative_lookahead? r0, (@parser.regexp r0, '[a-zA-Z0-9_]'))
+    assert_not_nil r1
+    assert_equal 0, r1.start_index
   end
   
 end

@@ -13,7 +13,7 @@ require File.join(dir, "anagrammar_ruby")
 
 module Anagram
   module Pack
-    module Anagrammar
+    module Anagrammar 
       extend Anagram::Pack::GrammarPack
       
       # Rewriting rules

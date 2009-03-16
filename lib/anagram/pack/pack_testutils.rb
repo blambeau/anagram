@@ -17,6 +17,7 @@ module Anagram
       rescue Anagram::Parsing::ParseError => ex
         puts ex.message
         msg << "\n#{ex.message}"
+        raise ex
         assert false, msg
       end
     

@@ -16,6 +16,7 @@ module Anagram
       
       module ParserMethods
         include Anagram::Pack::Boolexpr::SyntaxTree
+    
         def root() :bool_ast; end
         def _nt_bool_ast(r)
           result=already_found?(r, :bool_ast)
@@ -67,7 +68,7 @@ module Anagram
           result=already_found?(r, :boolexpr_proposition)
           return result if result
           result = ((r_1 = (negative_lookahead? r, (_nt_keyword r)) and
-                     r_2 = (regexp r_1, '[a-z]+') and
+                     r_2 = (regexp r_1, '[a-z_]+') and
                      r_3 = (_nt_boolexpr_spaces_or_eof r_2) and
                      
                      (accumulate r, [nil, :identifier, :boolexpr_spaces_or_eof], [r_1, r_2, r_3])) or
@@ -186,7 +187,7 @@ module Anagram
           result=already_found?(r, :boolexpr_spaces)
           return result if result
           result = ((regexp r, '[\\s]+') or
-                    (positive_lookahead? r, (terminal r, '(')) or
+                    (negative_lookahead? r, (regexp r, '[a-zA-Z0-9_]')) or
                      nil)
           (memoize r, :boolexpr_spaces, result) if result
         end
@@ -194,8 +195,8 @@ module Anagram
           result=already_found?(r, :boolexpr_spaces_or_eof)
           return result if result
           result = ((regexp r, '[\\s]+') or
-                    (positive_lookahead? r, (terminal r, '(')) or
-                    (negative_lookahead? r, (regexp r, '[.]')) or
+                    (negative_lookahead? r, (regexp r, '[a-zA-Z0-9_]')) or
+                    (negative_lookahead? r, (anything r)) or
                      nil)
           (memoize r, :boolexpr_spaces_or_eof, result) if result
         end
