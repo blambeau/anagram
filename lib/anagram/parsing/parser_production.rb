@@ -18,13 +18,6 @@ module Anagram
           node
         end
     
-        # Labelizes a given result
-        def labelize(label, result)
-          return nil unless result
-          result.key_in_parent = label
-          result
-        end
-      
         # Adds semantic types
         def add_semantic_types(result, types)
           return nil unless result

@@ -46,6 +46,7 @@ class NodeTest < Test::Unit::TestCase
     assert_equal [:left], root.child_keys
     assert_equal :left, x.key_in_parent
     assert_equal x, root.select(:left)
+    assert_equal root, x.parent
     
     y = leaf(Tags::Prop, "y")
     assert Tags::Prop===y

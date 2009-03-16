@@ -83,6 +83,7 @@ module Anagram
         @children, @child_keys = children, {}
         @children.each_with_index do |child,i|
           key = child.key_in_parent
+          child.attach(self, key)
           @child_keys[key] = i unless key.nil?
         end
       end
