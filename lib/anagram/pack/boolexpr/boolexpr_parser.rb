@@ -180,13 +180,13 @@ module Anagram
         def _nt_boolexpr_spacing(r)
           result=already_found?(r, :boolexpr_spacing)
           return result if result
-          result = (regexp r, '[\\s]*')
+          result = (regexp r, '[ \\t]*')
           (memoize r, :boolexpr_spacing, result) if result
         end
         def _nt_boolexpr_spaces(r)
           result=already_found?(r, :boolexpr_spaces)
           return result if result
-          result = ((regexp r, '[\\s]+') or
+          result = ((regexp r, '[ \\t]+') or
                     (negative_lookahead? r, (regexp r, '[a-zA-Z0-9_]')) or
                      nil)
           (memoize r, :boolexpr_spaces, result) if result
@@ -194,7 +194,7 @@ module Anagram
         def _nt_boolexpr_spaces_or_eof(r)
           result=already_found?(r, :boolexpr_spaces_or_eof)
           return result if result
-          result = ((regexp r, '[\\s]+') or
+          result = ((regexp r, '[ \\t]+') or
                     (negative_lookahead? r, (regexp r, '[a-zA-Z0-9_]')) or
                     (negative_lookahead? r, (anything r)) or
                      nil)

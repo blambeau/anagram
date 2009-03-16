@@ -81,15 +81,15 @@ module Anagram
       ### Spaces ########################################################
       rule boolexpr_spacing
         # eat all spaces
-        [\s]*           
+        [ \t]*           
       end
       rule boolexpr_spaces
         # at least one space or a parenthesis
-        [\s]+ / ![a-zA-Z0-9_]
+        [ \t]+ / ![a-zA-Z0-9_]
       end
       rule boolexpr_spaces_or_eof
         # at least one space, a parenthesis, or EOF
-        [\s]+ / ![a-zA-Z0-9_] / !.
+        [ \t]+ / ![a-zA-Z0-9_] / !.
       end
 
       ### Intended to be overriden ######################################
