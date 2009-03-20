@@ -131,5 +131,5 @@ class EngineTest < Test::Unit::TestCase
       template Enclosed do "hello" end
     end
   end
-  
+    
 end

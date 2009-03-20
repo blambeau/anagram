@@ -49,6 +49,10 @@ module Anagram
         
         # Tests automatic creation of a semantic tree
         def test_pretty_printer
+          expr = "condition"
+          pprint = Boolexpr.pretty_print(expr)
+          assert_equal "condition", pprint
+          
           expr = "(not identified and  (died   or  unknown  ))"
           pprint = Boolexpr.pretty_print(expr)
           assert_equal "not(identified) and (died or unknown)", pprint
