@@ -72,6 +72,11 @@ module Anagram
       
       ### Debug API ###########################################################
       
+      # Returns the to_s on the semantic value
+      def to_s
+        semantic_value.to_s
+      end
+      
       # Debugs this node on an output buffer
       def debug(buffer="", show_source=false, indent=0)
         types    = semantic_types.join(', ')
