@@ -18,7 +18,7 @@ module WLang
         template = template.strip_block(template)
         template = template.tabto(template, 0)
         template = template[0..-2]
-        parser.context.evaluate("matching_rules") << [value, template]
+        parser.evaluate("matching_rules") << [value, template]
         ["", reached]
       end
   
@@ -41,7 +41,7 @@ module WLang
         parser.syntax_error(offset) if decoded.nil?
         value, with = decoded[:expr], decoded[:with]
 
-        rules = parser.context.evaluate("matching_rules")
+        rules = parser.evaluate("matching_rules")
         rules.each do |rule|
           next unless rule[0]===value
           template = rule[1]

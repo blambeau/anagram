@@ -4,6 +4,7 @@ module Anagram
       
       module ParserMethods
         include Anagram::Pack::Anagrammar::SyntaxTree
+    
         def root() :grammar_file; end
         def _nt_grammar_file(r)
           result=already_found?(r, :grammar_file)
